@@ -1,0 +1,71 @@
+# User Flows
+
+These walk through the core journeys end to end, grounded in the [MVP Scope](03-mvp-scope.md). They're the reference for building UI/feature modules later — each one should map fairly directly to a feature folder from [Folder Structure](06-folder-structure.md).
+
+## 1. Sign up / sign in
+
+1. New visitor lands on a sign-in screen with "sign in" / "create account" options.
+2. Sign up: email + password → Supabase Auth creates the user → `profiles` row created via trigger → redirected to "your decks" (empty state).
+3. Sign in: email + password → redirected to "your decks."
+4. Forgot password: email entered → reset link sent → user sets new password → redirected to sign in.
+
+**Empty state (first-ever login):** "your decks" shows no decks, with a single prominent "create your first deck" action — no onboarding wizard, in keeping with the "get out of the way" vision.
+
+## 2. Create a deck
+
+1. From "your decks," user taps "new deck."
+2. Form: name (required), description (optional), language/subject tag (optional, free text).
+3. Submit → deck created → user is taken into the (now-empty) deck, prompted to add the first card.
+
+## 3. Add / edit / delete cards
+
+**Add:**
+1. Inside a deck, "add card" → form with front, back, notes (optional).
+2. Submit → card appears in the deck's card list, in `new` review state (immediately due).
+3. Form stays open (or reopens empty) so a user can rapid-fire add many cards — this is the highest-frequency action in the app and should have the least friction.
+
+**Edit:** tap a card in the list → same form, pre-filled → save updates it in place. Editing content does not reset scheduling progress (`card_review_state` is untouched).
+
+**Delete:** delete action on a card, with a confirmation step (irreversible) → removes the card and cascades to its `card_review_state`/`review_logs`.
+
+## 4. Study session
+
+1. From "your decks," each deck shows a due-card count. User taps "study" on a deck (or a global "study all due cards" entry point spanning decks).
+2. The app loads the queue: cards where `due_at <= now()` for that deck (or across decks), via the `study` feature's repository call.
+3. **Empty due state:** "nothing due right now" with the next due time shown, if there are cards but none are due yet; a distinct "add some cards first" state if the deck has zero cards.
+4. For each card in the queue:
+   - Front is shown.
+   - User reveals the back (tap/click or keyboard shortcut).
+   - User rates **Again / Good / Easy**.
+   - The rating is sent to the `study` feature, which calls the domain SRS function to compute the new schedule, writes the updated `card_review_state`, and appends a `review_logs` row (see [Database Design](07-database-design.md)).
+   - Next card shown immediately — no waiting on a round trip to block the UI (optimistic update via TanStack Query).
+5. When the queue is empty, a short session summary is shown: total cards studied, breakdown by rating.
+
+## 5. Edit / delete a deck
+
+1. From "your decks" or inside a deck, "edit deck" → same form as creation, pre-filled.
+2. "delete deck" → confirmation step explicitly stating it removes all cards in it (irreversible) → cascades per [Database Design](07-database-design.md).
+
+## 6. Export a deck
+
+1. Inside a deck, "export" → choose format (JSON for full fidelity, CSV for simple front/back).
+2. File downloads directly in-browser (no server round trip needed beyond the data already fetched — see [API Design](09-api-design.md)).
+
+## 7. Import a deck
+
+1. From "your decks," "import" → choose a file (JSON or CSV).
+2. App parses and validates the file client-side (or via an Edge Function for larger files — see [API Design](09-api-design.md)) and shows a **preview**: deck name, card count, a sample of cards.
+3. User confirms → cards are created (new cards start in `new` state; a full-fidelity JSON import that includes prior scheduling state restores it instead).
+4. Errors (malformed file, unsupported format) are shown before anything is committed — nothing is partially imported.
+
+## 8. Multi-device continuity
+
+1. User signs in on a second device with the same account.
+2. "Your decks" shows the same decks and due counts immediately — this is a direct read from the same cloud database, not a distinct "sync" step. See [Synchronization Strategy](11-synchronization.md) for exactly what is and isn't guaranteed here (notably: this requires connectivity, since the MVP is online-first).
+
+## Key states to design for in every flow
+
+- **Loading** (initial fetch) — skeleton/spinner, not a blank screen.
+- **Empty** (no decks / no cards / nothing due) — each has a distinct, actionable message rather than a generic "no data."
+- **Error** (network failure, validation failure) — visible, specific, and recoverable (retry where it makes sense).
+- **Offline** (no connection) — per [Synchronization Strategy](11-synchronization.md), the MVP surfaces a clear "you're offline" state rather than silently failing.
