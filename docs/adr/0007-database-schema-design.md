@@ -24,10 +24,12 @@ We will model the schema as four tables: `profiles`, `decks`, `cards` (content o
 ## Consequences
 
 **Positive:**
+
 - Import/export logic never needs to special-case scheduling columns.
 - Resetting a card's progress is a delete on one table, not a selective column reset.
 - `review_logs` existing from day one means the future stats feature requires no data migration — just a new reader.
 
 **Negative / risks:**
+
 - One additional table and a one-to-one join (`cards` ↔ `card_review_state`) versus a flatter design — judged worth it for the separation above.
 - `review_logs` grows unbounded with no delete path; accepted for MVP scale (docs/07-database-design.md §Scalability note). Revisit only if it becomes an actual operational issue — partitioning/archival is additive and doesn't require changing anything upstream.

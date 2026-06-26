@@ -32,42 +32,43 @@ card_review_state  review_logs
 ## Tables
 
 ### `profiles`
+
 App-specific data about a user, separate from Supabase's own `auth.users` table (which we don't own the schema of).
 
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `uuid` PK, references `auth.users(id)` | Same id as the auth user. |
-| `display_name` | `text`, nullable | Shown in the UI; falls back to email if null. |
-| `created_at` | `timestamptz`, default `now()` | |
+| Column         | Type                                   | Notes                                         |
+| -------------- | -------------------------------------- | --------------------------------------------- |
+| `id`           | `uuid` PK, references `auth.users(id)` | Same id as the auth user.                     |
+| `display_name` | `text`, nullable                       | Shown in the UI; falls back to email if null. |
+| `created_at`   | `timestamptz`, default `now()`         |                                               |
 
 Populated automatically by a Postgres trigger on `auth.users` insert (standard Supabase pattern) — the application never creates this row directly.
 
 ### `decks`
 
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `uuid` PK, default `gen_random_uuid()` | |
-| `user_id` | `uuid`, references `profiles(id)`, not null | Owner. |
-| `name` | `text`, not null | |
-| `description` | `text`, nullable | |
-| `language` | `text`, nullable | Free-text tag (e.g. "Russian") — not an enum, since users study arbitrary subjects, not just languages (see [Product Vision](01-product-vision.md)). |
-| `created_at` | `timestamptz`, default `now()` | |
-| `updated_at` | `timestamptz`, default `now()` | Updated via trigger on row update. |
+| Column        | Type                                        | Notes                                                                                                                                                |
+| ------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | `uuid` PK, default `gen_random_uuid()`      |                                                                                                                                                      |
+| `user_id`     | `uuid`, references `profiles(id)`, not null | Owner.                                                                                                                                               |
+| `name`        | `text`, not null                            |                                                                                                                                                      |
+| `description` | `text`, nullable                            |                                                                                                                                                      |
+| `language`    | `text`, nullable                            | Free-text tag (e.g. "Russian") — not an enum, since users study arbitrary subjects, not just languages (see [Product Vision](01-product-vision.md)). |
+| `created_at`  | `timestamptz`, default `now()`              |                                                                                                                                                      |
+| `updated_at`  | `timestamptz`, default `now()`              | Updated via trigger on row update.                                                                                                                   |
 
 Index: `decks(user_id)`.
 
 ### `cards`
 
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `uuid` PK, default `gen_random_uuid()` | |
-| `deck_id` | `uuid`, references `decks(id)` on delete cascade, not null | |
-| `user_id` | `uuid`, references `profiles(id)`, not null | Denormalized from the parent deck's owner — see §Row Level Security. |
-| `front` | `text`, not null | |
-| `back` | `text`, not null | |
-| `notes` | `text`, nullable | Optional hint/mnemonic — see [MVP Scope](03-mvp-scope.md). |
-| `created_at` | `timestamptz`, default `now()` | |
-| `updated_at` | `timestamptz`, default `now()` | |
+| Column       | Type                                                       | Notes                                                                |
+| ------------ | ---------------------------------------------------------- | -------------------------------------------------------------------- |
+| `id`         | `uuid` PK, default `gen_random_uuid()`                     |                                                                      |
+| `deck_id`    | `uuid`, references `decks(id)` on delete cascade, not null |                                                                      |
+| `user_id`    | `uuid`, references `profiles(id)`, not null                | Denormalized from the parent deck's owner — see §Row Level Security. |
+| `front`      | `text`, not null                                           |                                                                      |
+| `back`       | `text`, not null                                           |                                                                      |
+| `notes`      | `text`, nullable                                           | Optional hint/mnemonic — see [MVP Scope](03-mvp-scope.md).           |
+| `created_at` | `timestamptz`, default `now()`                             |                                                                      |
+| `updated_at` | `timestamptz`, default `now()`                             |                                                                      |
 
 Index: `cards(deck_id)` (also speeds up the cascade delete when a deck is removed).
 
@@ -76,43 +77,44 @@ Index: `cards(deck_id)` (also speeds up the cascade delete when a deck is remove
 
 ### `card_review_state`
 
-Holds the *current* spaced-repetition scheduling state for a card — kept in its own table rather than as columns on `cards`.
+Holds the _current_ spaced-repetition scheduling state for a card — kept in its own table rather than as columns on `cards`.
 
-| Column | Type | Notes |
-|---|---|---|
-| `card_id` | `uuid` PK, references `cards(id)` on delete cascade | One-to-one with `cards`. |
-| `user_id` | `uuid`, references `profiles(id)`, not null | Denormalized — see §Row Level Security. |
-| `state` | `text`, not null, default `'new'` | Constrained via `check (state in ('new','learning','review','relearning'))` — see note below. |
-| `due_at` | `timestamptz`, not null, default `now()` | When the card next becomes eligible for study. |
-| `interval_days` | `real`, not null, default `0` | Current scheduling interval. |
-| `ease_factor` | `real`, not null, default `2.5` | SM-2-style ease multiplier. |
-| `repetitions` | `integer`, not null, default `0` | Consecutive successful reviews. |
-| `lapses` | `integer`, not null, default `0` | Times the card was rated "Again" after leaving the `new` state. |
-| `last_reviewed_at` | `timestamptz`, nullable | |
+| Column             | Type                                                | Notes                                                                                         |
+| ------------------ | --------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `card_id`          | `uuid` PK, references `cards(id)` on delete cascade | One-to-one with `cards`.                                                                      |
+| `user_id`          | `uuid`, references `profiles(id)`, not null         | Denormalized — see §Row Level Security.                                                       |
+| `state`            | `text`, not null, default `'new'`                   | Constrained via `check (state in ('new','learning','review','relearning'))` — see note below. |
+| `due_at`           | `timestamptz`, not null, default `now()`            | When the card next becomes eligible for study.                                                |
+| `interval_days`    | `real`, not null, default `0`                       | Current scheduling interval.                                                                  |
+| `ease_factor`      | `real`, not null, default `2.5`                     | SM-2-style ease multiplier.                                                                   |
+| `repetitions`      | `integer`, not null, default `0`                    | Consecutive successful reviews.                                                               |
+| `lapses`           | `integer`, not null, default `0`                    | Times the card was rated "Again" after leaving the `new` state.                               |
+| `last_reviewed_at` | `timestamptz`, nullable                             |                                                                                               |
 
 Index: **composite `card_review_state(user_id, due_at)`**. The study session's core query — for both a single deck and the cross-deck "study all due" view (see [User Flows](08-user-flows.md) §4) — is "give me this user's cards where `due_at <= now()`." A composite index on `(user_id, due_at)` answers that directly with no join to `cards`/`decks`, and scales as both the user base and per-user card counts grow. (A `due_at`-only index doesn't help here — it can't be used to filter by owner — see §Row Level Security for why `user_id` is denormalized onto this table at all.)
 
 **Decision:** Scheduling state is a separate table from `cards`, not extra columns on `cards`.
-**Why:** Keeps `cards` purely about *content* (what import/export cares about) and `card_review_state` purely about *scheduling progress*. This separation means export/import logic doesn't need to special-case scheduling columns, and a future "reset my progress on this deck" feature is a delete on one table, not a selective column reset on another.
+**Why:** Keeps `cards` purely about _content_ (what import/export cares about) and `card_review_state` purely about _scheduling progress_. This separation means export/import logic doesn't need to special-case scheduling columns, and a future "reset my progress on this deck" feature is a delete on one table, not a selective column reset on another.
 **Note on the algorithm itself:** the exact constants and transition rules (how much `ease_factor` changes on "Again" vs "Easy", how `interval_days` is computed) are an SM-2-family algorithm and are an implementation detail of the `domain/srs` module (see [Architecture](04-architecture.md)) finalized when the study module is actually built — not decided in this document, since this is a design doc, not an implementation.
 **Note on `state`/`rating` as `text` + `check`, not a native Postgres `enum`:** both this column and `review_logs.rating` (below) use `text` with a `check` constraint listing valid values, rather than a Postgres `enum` type. A `check` constraint is altered with an ordinary migration (`alter table ... drop constraint ..., add constraint ...`); native enum types require a separate, more awkward catalog change (`alter type ... add value`). Since this list of states/ratings may plausibly grow (e.g. a future "suspended" state), the more easily extensible option was chosen deliberately.
 
 ### `review_logs`
 
 Append-only history of every rating a user has given a card. Not used by the scheduling algorithm itself (which only needs current state), but kept from day one because:
+
 - it's the only way to ever build stats/insights ([Roadmap](13-roadmap.md) Phase 3) without having thrown the data away,
 - it's useful for debugging/tuning the algorithm later,
 - append-only tables carry essentially no design risk to add now vs. later, unlike a column you might need to remove.
 
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `uuid` PK, default `gen_random_uuid()` | |
-| `card_id` | `uuid`, references `cards(id)` on delete cascade, not null | |
-| `user_id` | `uuid`, references `profiles(id)`, not null | Denormalized — see §Row Level Security. |
-| `rating` | `text`, not null | Constrained via `check (rating in ('again','good','easy'))`. |
-| `reviewed_at` | `timestamptz`, not null, default `now()` | |
-| `interval_before` | `real`, nullable | Interval prior to this review. |
-| `interval_after` | `real`, nullable | Interval resulting from this review. |
+| Column            | Type                                                       | Notes                                                        |
+| ----------------- | ---------------------------------------------------------- | ------------------------------------------------------------ |
+| `id`              | `uuid` PK, default `gen_random_uuid()`                     |                                                              |
+| `card_id`         | `uuid`, references `cards(id)` on delete cascade, not null |                                                              |
+| `user_id`         | `uuid`, references `profiles(id)`, not null                | Denormalized — see §Row Level Security.                      |
+| `rating`          | `text`, not null                                           | Constrained via `check (rating in ('again','good','easy'))`. |
+| `reviewed_at`     | `timestamptz`, not null, default `now()`                   |                                                              |
+| `interval_before` | `real`, nullable                                           | Interval prior to this review.                               |
+| `interval_after`  | `real`, nullable                                           | Interval resulting from this review.                         |
 
 Indexes: `review_logs(card_id)` (cascade-delete performance) and `review_logs(user_id, reviewed_at)` (anticipates the Phase 3 stats queries in [Roadmap](13-roadmap.md) — "show my study activity over time" is exactly this access pattern).
 
@@ -171,7 +173,7 @@ create policy "review_logs_owner_rw" on review_logs
 
 ## Future extensibility (not built now, but designed for)
 
-These are explicitly *not* part of the MVP schema, called out here only so today's design doesn't accidentally make them harder later (see [Roadmap](13-roadmap.md)):
+These are explicitly _not_ part of the MVP schema, called out here only so today's design doesn't accidentally make them harder later (see [Roadmap](13-roadmap.md)):
 
 - **Community sharing:** adding `decks.is_public boolean default false` and `decks.forked_from_deck_id uuid references decks(id)` later is additive — no existing column changes meaning.
 - **Rich media:** would likely mean `cards.front`/`back` becoming structured (JSON blocks) or adding a separate `card_attachments` table referencing Supabase Storage — deferred until the feature is actually scoped.

@@ -24,8 +24,10 @@ We will host the frontend on Vercel.
 ## Consequences
 
 **Positive:**
+
 - No server to manage; deploys are a git push.
 - Automatic preview deployments per pull request support the review-before-merge workflow (docs/12-coding-standards.md).
 
 **Negative / risks:**
+
 - Minor vendor coupling to Vercel's deployment conventions; low-cost to change later since no application code references the hosting platform directly.

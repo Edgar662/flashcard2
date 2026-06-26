@@ -28,7 +28,9 @@ State the chosen approach plainly: "We will …". This is the only section a tim
 Both directions, honestly:
 
 **Positive:**
+
 - What this makes easier, safer, or cheaper.
 
 **Negative / risks:**
+
 - What this makes harder, costs, or risks — and, where relevant, what would make us revisit this decision.

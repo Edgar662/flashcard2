@@ -24,8 +24,10 @@ We will use Supabase's auto-generated PostgREST API for all standard CRUD, and a
 ## Consequences
 
 **Positive:**
+
 - Minimal moving parts — no API code to write for the common case, and every Edge Function added is a deliberate, reviewable choice rather than a default.
 - Row-Level Security does the authorization work a hand-written API would otherwise need custom middleware for.
 
 **Negative / risks:**
+
 - Operations that don't map cleanly to single-table CRUD need an Edge Function — a separate deployable unit with its own runtime (Deno) — a real, if small, increase in operational surface versus pure CRUD.

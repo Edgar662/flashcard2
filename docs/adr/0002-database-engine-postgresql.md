@@ -25,9 +25,11 @@ We will use PostgreSQL, as provided by Supabase.
 ## Consequences
 
 **Positive:**
+
 - Real relational integrity (foreign keys, cascading deletes) matches the actual shape of the data.
 - Row-Level Security is a first-class Postgres feature and the backbone of the authorization model (ADR-0008).
 - Mature, well-documented, and supports the composite indexing the due-card scheduling query needs as data grows.
 
 **Negative / risks:**
+
 - Less schema flexibility than a document store if card content needs ever become highly heterogeneous. Not a concern for the MVP's plain-text cards; revisit only if/when rich media (docs/07-database-design.md §Future Extensibility) is actually built.

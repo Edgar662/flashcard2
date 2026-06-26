@@ -24,9 +24,11 @@ We will organize the frontend into four layers with a strict dependency directio
 ## Consequences
 
 **Positive:**
+
 - The spaced-repetition algorithm is unit-testable in isolation and portable to a future non-web client without rewriting it.
 - Backend access has exactly one seam — if Supabase is ever replaced, only the data-access layer changes, not the UI or domain logic.
 - Enforceable via ESLint import-boundary rules (docs/12-coding-standards.md), not left to convention or code review alone.
 
 **Negative / risks:**
+
 - Adds a small amount of indirection (a repository wrapper, a pure domain function called from a hook) even for simple operations — judged worth it for testability and future portability.

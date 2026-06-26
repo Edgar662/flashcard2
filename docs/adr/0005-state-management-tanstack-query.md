@@ -24,8 +24,10 @@ We will use TanStack Query as the sole mechanism for server state (caching, de-d
 ## Consequences
 
 **Positive:**
+
 - One consistent caching/invalidation model across every feature.
 - Less code overall than either hand-rolling the same behavior or running two state systems in parallel.
 
 **Negative / risks:**
+
 - If a genuine cross-feature, client-only state need emerges later (e.g. a multi-step wizard spanning routes) that doesn't fit local component state, this decision should be revisited deliberately rather than worked around with prop-drilling (see docs/04-architecture.md §State management).

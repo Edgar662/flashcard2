@@ -20,7 +20,7 @@ These are the engineering-side translations of the product goals, and the lens t
 
 ## Non-goals
 
-- **Premature scale.** We are not designing for millions of users on day one. We are designing so that *getting there* doesn't require throwing away the foundation — see the explicit "what would change" notes in [Synchronization Strategy](11-synchronization.md) and [Roadmap](13-roadmap.md).
+- **Premature scale.** We are not designing for millions of users on day one. We are designing so that _getting there_ doesn't require throwing away the foundation — see the explicit "what would change" notes in [Synchronization Strategy](11-synchronization.md) and [Roadmap](13-roadmap.md).
 - **Framework purity for its own sake.** We will use a managed backend (Supabase) and accept some vendor coupling in exchange for not building auth, an API layer, and infrastructure from scratch. The reasoning is in [Architecture](04-architecture.md).
 
 ## How we'll know the foundation is right

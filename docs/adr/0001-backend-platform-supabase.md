@@ -25,11 +25,13 @@ We will use Supabase (managed Postgres + Auth + Storage + Edge Functions + an au
 ## Consequences
 
 **Positive:**
+
 - No auth service, API server, or infrastructure to build or operate ourselves.
 - Row-Level Security gives a real, database-enforced authorization boundary "for free" (ADR-0008).
 - A free tier sufficient for MVP scale, with a predictable cost profile while the product is validated.
 
 **Negative / risks:**
+
 - Some coupling to Supabase's specific APIs and conventions.
 - Mitigated by the repository pattern (ADR-0004): only the data-access layer would need to change if the backend were ever migrated away from Supabase.
 - Less granular control than a custom server over exactly what the API surface looks like; addressed case by case with Edge Functions (ADR-0006) when plain CRUD isn't enough.

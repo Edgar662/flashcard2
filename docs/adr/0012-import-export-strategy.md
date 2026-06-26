@@ -25,9 +25,11 @@ We will always parse client-side for an instant preview, and always commit via t
 ## Consequences
 
 **Positive:**
+
 - Instant preview feedback without waiting on a network round trip.
 - The actual write is always transactional and re-validated server-side — a client-side bug or a malicious direct API call can't partially corrupt a deck.
 - One schema, not two hand-maintained parsers that could drift apart.
 
 **Negative / risks:**
+
 - Requires confirming, during initial repo scaffolding, that a Deno Edge Function can import the same TypeScript module the Vite frontend uses — flagged as a Phase 0 spike, not assumed to just work (docs/09-api-design.md).

@@ -20,6 +20,7 @@ These walk through the core journeys end to end, grounded in the [MVP Scope](03-
 ## 3. Add / edit / delete cards
 
 **Add:**
+
 1. Inside a deck, "add card" → form with front, back, notes (optional).
 2. Submit → card appears in the deck's card list, in `new` review state (immediately due).
 3. Form stays open (or reopens empty) so a user can rapid-fire add many cards — this is the highest-frequency action in the app and should have the least friction.

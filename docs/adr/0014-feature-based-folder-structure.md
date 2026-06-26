@@ -23,8 +23,10 @@ We will organize `src/features/` by business feature (`auth`, `decks`, `cards`, 
 ## Consequences
 
 **Positive:**
+
 - Understanding or deleting a feature means opening or removing one folder.
 - Scales by adding folders as features grow, not by growing a handful of top-level technical folders indefinitely.
 
 **Negative / risks:**
+
 - Genuinely shared UI or logic needs a deliberate promotion step (to `src/components` or `src/domain`) rather than just living wherever was convenient — a minor discipline cost, enforced via code review and the import-boundary lint rules in docs/12-coding-standards.md.

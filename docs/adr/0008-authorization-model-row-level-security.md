@@ -25,9 +25,11 @@ We will enforce authorization entirely via Postgres Row-Level Security. `cards`,
 ## Consequences
 
 **Positive:**
+
 - A bug in frontend code cannot leak another user's data — Postgres refuses the query regardless of what the application does or doesn't filter.
 - The due-card query — including the cross-deck "study all due" view — runs as a single indexed lookup (`card_review_state(user_id, due_at)`), not a multi-table join.
 - Ownership spoofing across parents is rejected at write time by the database, not just assumed correct by convention.
 
 **Negative / risks:**
+
 - Denormalization always raises a drift risk. Mitigated here because no feature ever reassigns ownership of a card or review-state row once created, and the write-time integrity check makes drift structurally impossible rather than merely unlikely.

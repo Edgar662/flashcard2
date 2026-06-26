@@ -1,6 +1,6 @@
 # Flashcards — Foundation Documentation
 
-This folder is the architectural foundation of the project, written and agreed upon **before any application code is written**. Every document explains not just *what* was decided but *why*, so the reasoning can be revisited as the product grows.
+This folder is the architectural foundation of the project, written and agreed upon **before any application code is written**. Every document explains not just _what_ was decided but _why_, so the reasoning can be revisited as the product grows.
 
 ## How to read this
 
@@ -22,18 +22,18 @@ Read in order — each document builds on the assumptions of the previous one:
 
 ## Decision log
 
-Every major architectural decision — what was chosen, what else was considered, and why — is recorded as an Architecture Decision Record in [adr/](adr/README.md). The numbered documents above describe the system as it currently stands; the ADR log is the historical trail of *why* it stands that way. Start at [adr/README.md](adr/README.md) for the index and the conventions used.
+Every major architectural decision — what was chosen, what else was considered, and why — is recorded as an Architecture Decision Record in [adr/](adr/README.md). The numbered documents above describe the system as it currently stands; the ADR log is the historical trail of _why_ it stands that way. Start at [adr/README.md](adr/README.md) for the index and the conventions used.
 
 ## Foundational decisions locked in for this version
 
 These were decided up front because they shape every other document. They can be revisited later, but changing them after the foundation is built is expensive — so they're called out explicitly here:
 
-| Decision | Choice | Doc |
-|---|---|---|
-| Platform (MVP) | Web app, installable as a PWA | [05](05-tech-stack.md), [13](13-roadmap.md) |
-| Backend | Supabase (managed Postgres + Auth + Storage + Edge Functions) | [04](04-architecture.md), [05](05-tech-stack.md) |
-| Sync model | Online-first; the cloud database is the single source of truth | [11](11-synchronization.md) |
-| Frontend stack | React + TypeScript | [05](05-tech-stack.md) |
+| Decision       | Choice                                                         | Doc                                              |
+| -------------- | -------------------------------------------------------------- | ------------------------------------------------ |
+| Platform (MVP) | Web app, installable as a PWA                                  | [05](05-tech-stack.md), [13](13-roadmap.md)      |
+| Backend        | Supabase (managed Postgres + Auth + Storage + Edge Functions)  | [04](04-architecture.md), [05](05-tech-stack.md) |
+| Sync model     | Online-first; the cloud database is the single source of truth | [11](11-synchronization.md)                      |
+| Frontend stack | React + TypeScript                                             | [05](05-tech-stack.md)                           |
 
 ## Process
 

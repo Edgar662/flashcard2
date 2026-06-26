@@ -25,10 +25,12 @@ We will use Supabase Auth with email/password for the MVP, issuing standard JWTs
 ## Consequences
 
 **Positive:**
+
 - No separate auth service to build or operate; integrates directly with RLS.
 - Password reset and email verification are Supabase Auth built-ins, not custom code.
 - OAuth, MFA, and magic links remain additive (configuration, not architecture) if added later.
 
 **Negative / risks:**
+
 - Each device holds its own session independently — signing out on one device does not sign out another. This is documented as expected JWT behavior, not a gap (docs/10-authentication.md).
 - No "active sessions" management UI in the MVP; a reasonable low-priority gap to close later if users ask for it.

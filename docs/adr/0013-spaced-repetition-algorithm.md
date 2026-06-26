@@ -25,10 +25,12 @@ We will implement a simplified, three-button (Again/Good/Easy) SM-2-family sched
 ## Consequences
 
 **Positive:**
+
 - Matches the product's "no configuration, no setup" promise directly.
 - A pure function is fully unit-testable in isolation and portable to a future non-web client without rewriting it.
 - The database schema already supports it without changes.
 
 **Negative / risks:**
+
 - Three buttons carry less granularity than Anki's four. If user feedback later shows real demand for a distinct "hard but I got it" signal, that should be a deliberate new decision, not a hidden fourth state patched in.
 - Tuning the exact ease/interval constants well (so the schedule actually feels right) is real, non-trivial work deferred to Phase 1 — this ADR commits to the algorithm family, not the tuning.

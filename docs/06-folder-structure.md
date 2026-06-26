@@ -88,7 +88,7 @@ flashcards/
 **Decision:** `features/*/api/` is the only place outside `src/lib/supabaseClient.ts` that imports `supabase-js`.
 **Why:** Enforces the repository pattern from [Architecture](04-architecture.md) at the folder level — easy to lint, easy to spot in review if violated.
 
-## What's intentionally *not* here yet
+## What's intentionally _not_ here yet
 
 - No `mobile/` or `apps/*` monorepo split — there's a single web app target for the MVP (see [MVP Scope](03-mvp-scope.md)). If/when a native or React Native client is built, the `domain/` layer and the general repository pattern are designed to be lifted into a shared package at that point, but we don't pay that monorepo-tooling cost today for a client that doesn't exist yet.
 - No `server/` folder — there is no custom backend (see [Architecture](04-architecture.md)).

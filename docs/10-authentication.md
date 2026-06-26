@@ -12,7 +12,7 @@
 - Sign up (email + password) — creates an `auth.users` row; a Postgres trigger creates the matching `profiles` row (see [Database Design](07-database-design.md)).
 - Sign in / sign out.
 - Password reset via emailed link (Supabase Auth built-in flow).
-- Email verification (Supabase Auth built-in; whether to *require* verification before use is a launch-config decision, not an architectural one).
+- Email verification (Supabase Auth built-in; whether to _require_ verification before use is a launch-config decision, not an architectural one).
 
 ## How authorization actually works
 

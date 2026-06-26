@@ -7,6 +7,7 @@ There is no hand-written REST/GraphQL API for the MVP. "API design" here means: 
 **Decision:** All data access goes through typed repository functions in `features/*/api/` (e.g. `decksApi.list()`, `decksApi.create(input)`, `cardsApi.update(id, input)`), which internally call `supabase-js` against the auto-generated PostgREST API. No component or hook calls `supabase-js` directly.
 
 **Why:**
+
 - **Single error-handling convention.** Repository functions catch Supabase errors and re-throw/return a consistent typed shape, so feature code (and tests) don't each handle raw Supabase error objects differently.
 - **Testability.** Feature hooks can be tested against a mocked repository without a real Supabase connection.
 - **A seam, not a wall.** If the backend ever changed (different BaaS, a custom server), only these functions change — UI, feature hooks, and the domain layer wouldn't need to.
@@ -16,11 +17,19 @@ Example shape (illustrative only — not implemented yet):
 ```ts
 // features/decks/api/decksApi.ts
 export const decksApi = {
-  list: (): Promise<Deck[]> => { /* supabase.from('decks').select() ... */ },
-  create: (input: CreateDeckInput): Promise<Deck> => { /* ... */ },
-  update: (id: string, input: UpdateDeckInput): Promise<Deck> => { /* ... */ },
-  remove: (id: string): Promise<void> => { /* ... */ },
-};
+  list: (): Promise<Deck[]> => {
+    /* supabase.from('decks').select() ... */
+  },
+  create: (input: CreateDeckInput): Promise<Deck> => {
+    /* ... */
+  },
+  update: (id: string, input: UpdateDeckInput): Promise<Deck> => {
+    /* ... */
+  },
+  remove: (id: string): Promise<void> => {
+    /* ... */
+  },
+}
 ```
 
 Feature hooks (`useDecks`, `useCreateDeck`) wrap these with TanStack Query for caching/invalidation — components call the hooks, never the repository directly.
@@ -35,12 +44,12 @@ Feature hooks (`useDecks`, `useCreateDeck`) wrap these with TanStack Query for c
 
 Most operations are plain CRUD against a table, protected by RLS, and need nothing more than a repository function calling PostgREST. A few things don't fit that and become **Supabase Edge Functions** instead:
 
-| Operation | Mechanism | Why |
-|---|---|---|
-| List/create/update/delete decks, cards | Direct PostgREST call via repository | Simple ownership-scoped CRUD — exactly what RLS + auto-API is for. |
-| Submit a card review (write `card_review_state` + `review_logs`) | Direct PostgREST call(s) via repository, computed by the `domain/srs` module client-side | The scheduling *math* runs in the client (pure, testable function — see [Architecture](04-architecture.md)); only the *result* is written to the database. No server-side computation needed since there's nothing security-sensitive about a user updating their own card's schedule. |
-| Import a deck (JSON/CSV) | **Client-side parse for preview, then always an Edge Function (`import-deck`) to commit** | The preview needs to feel instant, so the file is parsed in the browser first — but the actual write always goes through the Edge Function, which re-validates and inserts every row in one transaction. This is a fixed rule, not conditional on file size (an earlier draft of this doc hedged on "larger files," which left the threshold undefined and let the same operation behave two different ways — removed for consistency with [User Flows](08-user-flows.md) §7). |
-| Export a deck | Client-side, no Edge Function | The data is already fetched/fetchable via normal queries; generating a JSON/CSV file from data already in hand is a pure client-side operation. Revisit only if export needs to aggregate something the client shouldn't fetch in bulk (not the case for the MVP). |
+| Operation                                                        | Mechanism                                                                                 | Why                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| List/create/update/delete decks, cards                           | Direct PostgREST call via repository                                                      | Simple ownership-scoped CRUD — exactly what RLS + auto-API is for.                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Submit a card review (write `card_review_state` + `review_logs`) | Direct PostgREST call(s) via repository, computed by the `domain/srs` module client-side  | The scheduling _math_ runs in the client (pure, testable function — see [Architecture](04-architecture.md)); only the _result_ is written to the database. No server-side computation needed since there's nothing security-sensitive about a user updating their own card's schedule.                                                                                                                                                                                         |
+| Import a deck (JSON/CSV)                                         | **Client-side parse for preview, then always an Edge Function (`import-deck`) to commit** | The preview needs to feel instant, so the file is parsed in the browser first — but the actual write always goes through the Edge Function, which re-validates and inserts every row in one transaction. This is a fixed rule, not conditional on file size (an earlier draft of this doc hedged on "larger files," which left the threshold undefined and let the same operation behave two different ways — removed for consistency with [User Flows](08-user-flows.md) §7). |
+| Export a deck                                                    | Client-side, no Edge Function                                                             | The data is already fetched/fetchable via normal queries; generating a JSON/CSV file from data already in hand is a pure client-side operation. Revisit only if export needs to aggregate something the client shouldn't fetch in bulk (not the case for the MVP).                                                                                                                                                                                                             |
 
 **Decision:** Default to direct CRUD via repositories; reach for an Edge Function only when an operation needs server-side validation, multi-row transactionality, or elevated privileges the client shouldn't have.
 **Why:** Keeps the system's moving parts minimal — every Edge Function is something we deploy, version, and operate. Adding one should be a deliberate choice, not the default.

@@ -23,10 +23,12 @@ We will build online-first for the MVP. Every device reads and writes directly t
 ## Consequences
 
 **Positive:**
+
 - Dramatically simpler to build and reason about — no conflict resolution, no mutation queue.
 - Multi-device access comes "for free," satisfying the cloud-sync requirement without a distinct sync subsystem.
 
 **Negative / risks:**
+
 - The app does not work offline for the MVP — an explicit, accepted tradeoff, not an oversight.
 - Conflict handling for the rare simultaneous-edit case is last-write-wins via `updated_at`; acceptable for a single-user personal tool, revisit only if it becomes an observed problem.
 - A documented migration path exists (docs/11-synchronization.md §Migration path) if offline studying is later validated as a real need, contained mostly to the data-access layer (ADR-0004) rather than requiring a rewrite.

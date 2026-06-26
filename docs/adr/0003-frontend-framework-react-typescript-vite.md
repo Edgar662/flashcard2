@@ -25,10 +25,12 @@ We will build the frontend as a Vite-bundled React + TypeScript single-page appl
 ## Consequences
 
 **Positive:**
+
 - Matches existing skillset — fastest path to a working MVP.
 - Vite's dev server and TypeScript-first tooling keep iteration fast.
 - Each supporting library (Tailwind, shadcn, RHF) is individually replaceable and none are deeply load-bearing in business logic.
 
 **Negative / risks:**
+
 - No server-rendering — if a public, SEO-relevant marketing surface is ever needed, it's likely a separate small project rather than a retrofit of this SPA.
 - A fairly opinionated set of libraries is locked in together; acceptable since none of them touch the domain layer (ADR-0004), which remains framework-agnostic regardless.

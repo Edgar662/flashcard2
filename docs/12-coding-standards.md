@@ -20,8 +20,8 @@ These exist to keep the codebase navigable by a small team (or a solo developer 
 
 These map directly to [Architecture](04-architecture.md) and [Folder Structure](06-folder-structure.md), and should be backed by ESLint import-boundary rules (e.g. `eslint-plugin-boundaries` or `import/no-restricted-paths`) so violations fail CI rather than relying on review catching them:
 
-1. **`src/domain/**` imports nothing from React or `supabase-js`.** Domain code is pure TypeScript, testable without rendering anything or hitting a network.
-2. **`supabase-js` is only imported in `src/lib/supabaseClient.ts` and `features/*/api/**`.** No component or hook calls Supabase directly.
+1. **`src/domain/**`imports nothing from React or`supabase-js`.\*\* Domain code is pure TypeScript, testable without rendering anything or hitting a network.
+2. **`supabase-js` is only imported in `src/lib/supabaseClient.ts` and `features/\*/api/**`.\*\* No component or hook calls Supabase directly.
 3. **Components don't reach into another feature's internals.** Cross-feature reuse goes through a feature's public exports (or gets promoted to `src/components`/`src/domain` if it's genuinely shared), not deep imports like `features/decks/components/internal/Thing`.
 
 ## State management rules
@@ -46,6 +46,6 @@ These map directly to [Architecture](04-architecture.md) and [Folder Structure](
 
 ## General code-quality heuristics
 
-- Prefer small, single-responsibility modules. Split a file when it visibly mixes more than one responsibility (e.g. data fetching *and* business rules) — this is a judgment call, not a line-count rule.
+- Prefer small, single-responsibility modules. Split a file when it visibly mixes more than one responsibility (e.g. data fetching _and_ business rules) — this is a judgment call, not a line-count rule.
 - No speculative abstraction: don't build a generic "repository factory" or "plugin system" for a need that doesn't exist yet. Three similar lines of code beat a premature abstraction (see project-wide engineering principles already in effect).
 - No dead code paths "just in case" — if something is unused, delete it; git history is the place unused code lives, not the working tree.

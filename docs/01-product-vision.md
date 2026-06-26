@@ -7,7 +7,7 @@ People learning a language (or anything else via memorization — vocabulary, an
 - **Generic flashcard apps** (Quizlet and similar) that are easy to use but treat spaced repetition as an afterthought, push pre-made content and ads, and don't give serious learners confidence that the scheduling is actually optimizing their retention.
 - **Powerful spaced-repetition tools** (Anki) that take scheduling seriously but expose enormous configuration surface area, dated UX, and a steep learning curve before a new user can create their first deck.
 
-There isn't an obvious option for someone who wants: *"let me write my own cards, in my own language pair or subject, and have the app quietly handle the hard part of when to show them to me again."*
+There isn't an obvious option for someone who wants: _"let me write my own cards, in my own language pair or subject, and have the app quietly handle the hard part of when to show them to me again."_
 
 ## Vision statement
 
@@ -23,13 +23,13 @@ This is **not**, at least for the MVP, aimed at teachers managing classrooms, or
 
 ## What makes this different
 
-| | Quizlet-style apps | Anki | This app |
-|---|---|---|---|
-| Custom content | Yes, but content discovery/ads dominate the UX | Yes | Yes — full customization is the point, not a side feature |
-| Spaced repetition | Often shallow or absent | Deep, but configuration-heavy | Real SM-2-style scheduling, with three buttons and no setup |
-| Onboarding | Easy | Hard | Easy |
-| Data ownership | Locked into the platform | Local files, full ownership | Cloud-synced, with full import/export so data is never trapped |
-| Sharing decks with others | Yes | Via separate community sites | Planned (post-MVP) — see [Roadmap](13-roadmap.md) |
+|                           | Quizlet-style apps                             | Anki                          | This app                                                       |
+| ------------------------- | ---------------------------------------------- | ----------------------------- | -------------------------------------------------------------- |
+| Custom content            | Yes, but content discovery/ads dominate the UX | Yes                           | Yes — full customization is the point, not a side feature      |
+| Spaced repetition         | Often shallow or absent                        | Deep, but configuration-heavy | Real SM-2-style scheduling, with three buttons and no setup    |
+| Onboarding                | Easy                                           | Hard                          | Easy                                                           |
+| Data ownership            | Locked into the platform                       | Local files, full ownership   | Cloud-synced, with full import/export so data is never trapped |
+| Sharing decks with others | Yes                                            | Via separate community sites  | Planned (post-MVP) — see [Roadmap](13-roadmap.md)              |
 
 The bet is that **simplicity and a credible algorithm are not in tension** — most of Anki's complexity is configuration knobs that the vast majority of users never need. We can default those away.
 
@@ -38,7 +38,7 @@ The bet is that **simplicity and a credible algorithm are not in tension** — m
 These are deliberately excluded from the product vision at this stage, not because they're bad ideas, but because chasing them now would dilute the core loop:
 
 - Gamification (streaks, leaderboards, badges) as a primary driver of engagement.
-- Pre-built content libraries or guided courses — this app is about *user-created* decks.
+- Pre-built content libraries or guided courses — this app is about _user-created_ decks.
 - Social/multiplayer features beyond the future community deck-sharing feature already planned.
 - Enterprise, classroom, or team-management features.
 
