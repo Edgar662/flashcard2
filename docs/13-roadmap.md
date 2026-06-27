@@ -2,7 +2,7 @@
 
 Built one module at a time, per the agreed process: each phase is reviewed before moving to the next. Phases are sequenced by what the core loop in [Product Vision](01-product-vision.md) needs first.
 
-**Sequencing note:** real authentication and Supabase wiring were deliberately reordered after Login/Home UI to come _after_ core deck management, not before — to get the product's central interaction (decks) reviewable sooner. Login/Home are built with simulated sign-in (no real session), and decks run against a localStorage repository instead of Supabase for now (ADR-0015). Both are designed to slot in the real backend without a UI rewrite — see ADR-0004 and ADR-0015.
+**Sequencing note:** real authentication and Supabase wiring were deliberately reordered after Login/Home UI to come _after_ core deck and card management, not before — to get the product's central interaction reviewable sooner. Login/Home are built with simulated sign-in (no real session), and decks/cards run against localStorage repositories instead of Supabase for now (ADR-0015). All are designed to slot in the real backend without a UI rewrite — see ADR-0004 and ADR-0015. Internationalization (ADR-0016) and the sidebar/drawer navigation shell were also brought forward, ahead of where the original phase breakdown below placed them, since they touch nearly every screen and are cheaper to build once than retrofitted later.
 
 ## Phase 0 — Foundation (current phase)
 
@@ -20,8 +20,8 @@ Built one module at a time, per the agreed process: each phase is reviewed befor
 **Goal:** Prove the product's central promise.
 
 - Decks: create/edit/delete/list — **done**, against the localStorage repository in ADR-0015 ([User Flows](08-user-flows.md) §2, §5).
-- Cards: create/edit/delete within a deck ([User Flows](08-user-flows.md) §3).
-- `domain/srs`: the spaced-repetition algorithm, built and unit-tested as a pure module ([Architecture](04-architecture.md)).
+- Cards: create/edit/delete/search/sort within a deck — **done**, same localStorage approach via a dedicated `CardsRepository` ([User Flows](08-user-flows.md) §3).
+- `domain/srs`: types prepared (`CardReviewState`, `CardReviewRating`) per ADR-0007's content/scheduling separation; the scheduling algorithm itself is not yet built.
 - Study session: due-card queue (per-deck and the global cross-deck view — both share one query, see [Database Design](07-database-design.md) §Row Level Security), Again/Good/Easy, session summary ([User Flows](08-user-flows.md) §4).
 
 **Exit criteria:** [MVP Scope](03-mvp-scope.md)'s "definition of done" items 1–4 are met.

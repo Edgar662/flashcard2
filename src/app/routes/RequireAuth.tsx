@@ -1,4 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/app/providers/useAuth'
 
 /**
@@ -8,11 +9,12 @@ import { useAuth } from '@/app/providers/useAuth'
  */
 export function RequireAuth() {
   const { session, isLoading } = useAuth()
+  const { t } = useTranslation()
 
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center text-muted-foreground">
-        Loading…
+        {t('common.loading')}
       </div>
     )
   }

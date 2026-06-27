@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { DECK_COLORS } from './deckColors'
 
@@ -7,15 +8,17 @@ interface DeckColorPickerProps {
 }
 
 export function DeckColorPicker({ value, onChange }: DeckColorPickerProps) {
+  const { t } = useTranslation()
+
   return (
     <div>
-      <span className="text-sm font-medium">Color</span>
+      <span className="text-sm font-medium">{t('decks.color')}</span>
       <div className="mt-1.5 flex flex-wrap gap-2">
         {DECK_COLORS.map((color) => (
           <button
             key={color}
             type="button"
-            aria-label={`Select color ${color}`}
+            aria-label={t('decks.selectColor', { color })}
             aria-pressed={value === color}
             onClick={() => onChange(color)}
             className={cn(

@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
 
-/** App shell — shared chrome around every route. No feature UI lives here. */
-export function RootLayout() {
+/** Shell for entry-point routes (login/signup) — no sidebar. */
+export function AuthLayout() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Outlet />

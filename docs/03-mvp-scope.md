@@ -11,14 +11,20 @@ The MVP exists to prove the core loop from [Goals](02-goals.md): create a deck, 
 
 ### Decks
 
-- Create, rename/edit (name, optional language tag, color for visual identification), delete a deck — with a confirmation step before delete.
-- List all of a user's decks as responsive cards; clicking one opens its detail page. A due-card count per deck is added once studying exists (see [Roadmap](13-roadmap.md) Phase 1).
+- Create, rename/edit (name, language, color for visual identification), delete a deck — with a confirmation step before delete.
+- **Every deck represents one study language**, chosen from the same five the UI supports (see §Internationalization) — a deliberate narrowing of [Product Vision](01-product-vision.md)'s "any language, any subject" framing for now, not a reversal of it; see ADR-0017 for the reasoning and what would need to change to support non-language (e.g. "any subject") decks again.
+- List all of a user's decks as responsive cards showing color, language, card count, and last-studied (placeholder until studying exists); clicking one opens its detail page.
 
 ### Flashcards
 
-- Create, edit, delete a card within a deck.
-- A card has at minimum a **front** and **back** (text). An optional **notes/hint** field is included since it's trivial to add now and meaningfully useful (e.g., a mnemonic or grammar note) — see [Database Design](07-database-design.md).
+- Create, edit, delete a card within a deck; list, search (front/back substring match), and view alphabetically sorted (locale-aware, by the deck's language).
+- A card has a **front** (original word/sentence) and **back** (translation), plus optional **pronunciation**, **notes**, and **example sentence** — see [Database Design](07-database-design.md).
 - Deleting a deck deletes its cards (cascade).
+
+### Internationalization
+
+- UI available in English, Portuguese, Russian, German, and Japanese; every string is translated, no hardcoded UI text.
+- A language selector (Settings page) switches the UI instantly; the choice persists in `localStorage` across sessions. See ADR-0016.
 
 ### Studying
 

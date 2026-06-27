@@ -15,7 +15,8 @@ flashcards/
 ├── src/
 │   ├── app/                       # app shell
 │   │   ├── routes/                # route definitions / page composition
-│   │   └── providers/             # QueryClientProvider, AuthProvider, etc.
+│   │   ├── providers/             # QueryClientProvider, AuthProvider, etc.
+│   │   └── layout/                # AppLayout, Sidebar, MobileNav/MobileDrawer, nav config
 │   │
 │   ├── features/                  # one folder per business feature
 │   │   ├── auth/
@@ -45,11 +46,11 @@ flashcards/
 │   │       └── types.ts
 │   │
 │   ├── domain/                    # pure business logic — no React, no Supabase imports
-│   │   ├── srs/                   # spaced-repetition scheduling algorithm + its unit tests
+│   │   ├── srs/                   # CardReviewState/rating types now; the scheduling algorithm itself is not built yet
 │   │   └── importExport/          # Zod schema for valid import files — shared with the import-deck Edge Function, see docs/09-api-design.md
 │   │
-│   ├── components/                 # shared, generic, feature-agnostic UI (Button, Dialog, Input...)
-│   ├── lib/                        # infrastructure: supabaseClient.ts, queryClient.ts, env.ts
+│   ├── components/                 # shared, generic, feature-agnostic UI (Button, Dialog, Select, ConfirmDialog...)
+│   ├── lib/                        # infrastructure: supabaseClient.ts, env.ts, languages.ts, i18n/ (i18next setup + locale JSON)
 │   ├── hooks/                      # shared generic hooks (useDebounce, useMediaQuery...)
 │   ├── types/                      # shared/generated types, incl. generated Supabase DB types
 │   ├── styles/                     # Tailwind entry, global CSS

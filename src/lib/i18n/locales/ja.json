@@ -1,0 +1,95 @@
+{
+  "common": {
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる",
+    "loading": "読み込み中…",
+    "somethingWentWrong": "問題が発生しました。もう一度お試しください。",
+    "optional": "任意"
+  },
+  "nav": {
+    "home": "ホーム",
+    "decks": "デッキ",
+    "settings": "設定",
+    "openMenu": "メニューを開く",
+    "closeMenu": "メニューを閉じる"
+  },
+  "auth": {
+    "signInToAccount": "アカウントにサインイン",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "signIn": "サインイン",
+    "noAccount": "アカウントをお持ちでないですか？",
+    "createAccount": "アカウントを作成",
+    "createAccountComingSoon": "アカウント作成機能は近日公開予定です。",
+    "emailRequired": "メールアドレスを入力してください",
+    "emailInvalid": "有効なメールアドレスを入力してください",
+    "passwordRequired": "パスワードを入力してください"
+  },
+  "home": {
+    "welcomeBack": "おかえりなさい",
+    "overview": "学習教材の概要です。",
+    "totalDecks_other": "{{count}} 件のデッキ",
+    "totalCards_other": "{{count}} 枚のカード",
+    "goToDecks": "デッキを見る"
+  },
+  "decks": {
+    "title": "あなたのデッキ",
+    "newDeck": "新しいデッキ",
+    "editDeck": "デッキを編集",
+    "name": "名前",
+    "language": "言語",
+    "color": "カラー",
+    "nameRequired": "名前を入力してください",
+    "nameTooLong": "60文字以内で入力してください",
+    "languageRequired": "言語を選択してください",
+    "colorRequired": "カラーを選択してください",
+    "selectColor": "カラー {{color}} を選択",
+    "createDeck": "デッキを作成",
+    "saveChanges": "変更を保存",
+    "empty": "デッキがまだありません。最初のデッキを作成して学習を始めましょう。",
+    "deleteConfirmTitle": "「{{name}}」を削除しますか？",
+    "deleteConfirmDescription": "この操作は取り消せません。",
+    "cardCount_other": "{{count}} 枚のカード",
+    "lastStudied": "最終学習日",
+    "neverStudied": "まだ学習していません",
+    "backToDecks": "あなたのデッキ"
+  },
+  "cards": {
+    "title": "カード",
+    "newCard": "新しいカード",
+    "editCard": "カードを編集",
+    "searchPlaceholder": "カードを検索…",
+    "empty": "カードがまだありません。最初のカードを追加しましょう。",
+    "noResults": "検索条件に一致するカードがありません。",
+    "front": "表面",
+    "back": "裏面",
+    "pronunciation": "発音",
+    "notes": "メモ",
+    "exampleSentence": "例文",
+    "frontRequired": "表面を入力してください",
+    "backRequired": "裏面を入力してください",
+    "createCard": "カードを作成",
+    "saveChanges": "変更を保存",
+    "deleteConfirmTitle": "このカードを削除しますか？",
+    "deleteConfirmDescription": "この操作は取り消せません。"
+  },
+  "settings": {
+    "title": "設定",
+    "language": "言語",
+    "languageDescription": "アプリの表示言語を選択してください。"
+  },
+  "languages": {
+    "en": "英語",
+    "pt": "ポルトガル語",
+    "ru": "ロシア語",
+    "de": "ドイツ語",
+    "ja": "日本語"
+  },
+  "notFound": {
+    "title": "ページが見つかりません",
+    "backToDecks": "デッキ一覧に戻る"
+  }
+}

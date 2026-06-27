@@ -1,6 +1,16 @@
+import { LANGUAGE_CODES } from '@/lib/languages'
 import type { CreateDeckInput, Deck, UpdateDeckInput } from '../types'
 
 const STORAGE_KEY = 'flashcards:decks'
+
+function isValidLanguage(value: unknown): value is Deck['language'] {
+  return typeof value === 'string' && (LANGUAGE_CODES as readonly string[]).includes(value)
+}
+
+/** Guards against stale dev data predating the language enum (free text or null). */
+function normalizeDeck(deck: Deck): Deck {
+  return isValidLanguage(deck.language) ? deck : { ...deck, language: 'en' }
+}
 
 /**
  * The contract any deck storage backend must satisfy. `decksApi` below is
@@ -19,7 +29,8 @@ export interface DecksRepository {
 function readDecks(): Deck[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? (JSON.parse(raw) as Deck[]) : []
+    const decks = raw ? (JSON.parse(raw) as Deck[]) : []
+    return decks.map(normalizeDeck)
   } catch {
     return []
   }

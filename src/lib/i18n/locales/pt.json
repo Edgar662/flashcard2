@@ -1,0 +1,98 @@
+{
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar",
+    "loading": "Carregando…",
+    "somethingWentWrong": "Algo deu errado. Tente novamente.",
+    "optional": "opcional"
+  },
+  "nav": {
+    "home": "Início",
+    "decks": "Baralhos",
+    "settings": "Configurações",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu"
+  },
+  "auth": {
+    "signInToAccount": "Entre na sua conta",
+    "email": "E-mail",
+    "password": "Senha",
+    "signIn": "Entrar",
+    "noAccount": "Não tem uma conta?",
+    "createAccount": "Criar conta",
+    "createAccountComingSoon": "Criar conta — em breve.",
+    "emailRequired": "O e-mail é obrigatório",
+    "emailInvalid": "Digite um e-mail válido",
+    "passwordRequired": "A senha é obrigatória"
+  },
+  "home": {
+    "welcomeBack": "Bem-vindo de volta",
+    "overview": "Aqui está um resumo do seu material de estudo.",
+    "totalDecks_one": "{{count}} baralho",
+    "totalDecks_other": "{{count}} baralhos",
+    "totalCards_one": "{{count}} carta",
+    "totalCards_other": "{{count}} cartas",
+    "goToDecks": "Ir para seus baralhos"
+  },
+  "decks": {
+    "title": "Seus baralhos",
+    "newDeck": "Novo baralho",
+    "editDeck": "Editar baralho",
+    "name": "Nome",
+    "language": "Idioma",
+    "color": "Cor",
+    "nameRequired": "O nome é obrigatório",
+    "nameTooLong": "Use no máximo 60 caracteres",
+    "languageRequired": "Escolha um idioma",
+    "colorRequired": "Escolha uma cor",
+    "selectColor": "Selecionar cor {{color}}",
+    "createDeck": "Criar baralho",
+    "saveChanges": "Salvar alterações",
+    "empty": "Nenhum baralho ainda — crie o primeiro para começar a estudar.",
+    "deleteConfirmTitle": "Excluir \"{{name}}\"?",
+    "deleteConfirmDescription": "Essa ação não pode ser desfeita.",
+    "cardCount_one": "{{count}} carta",
+    "cardCount_other": "{{count}} cartas",
+    "lastStudied": "Último estudo",
+    "neverStudied": "Nunca estudado",
+    "backToDecks": "Seus baralhos"
+  },
+  "cards": {
+    "title": "Cartas",
+    "newCard": "Nova carta",
+    "editCard": "Editar carta",
+    "searchPlaceholder": "Buscar cartas…",
+    "empty": "Nenhuma carta ainda — adicione a primeira.",
+    "noResults": "Nenhuma carta corresponde à sua busca.",
+    "front": "Frente",
+    "back": "Verso",
+    "pronunciation": "Pronúncia",
+    "notes": "Notas",
+    "exampleSentence": "Frase de exemplo",
+    "frontRequired": "A frente é obrigatória",
+    "backRequired": "O verso é obrigatório",
+    "createCard": "Criar carta",
+    "saveChanges": "Salvar alterações",
+    "deleteConfirmTitle": "Excluir esta carta?",
+    "deleteConfirmDescription": "Essa ação não pode ser desfeita."
+  },
+  "settings": {
+    "title": "Configurações",
+    "language": "Idioma",
+    "languageDescription": "Escolha o idioma de exibição do aplicativo."
+  },
+  "languages": {
+    "en": "Inglês",
+    "pt": "Português",
+    "ru": "Russo",
+    "de": "Alemão",
+    "ja": "Japonês"
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "backToDecks": "Voltar para seus baralhos"
+  }
+}

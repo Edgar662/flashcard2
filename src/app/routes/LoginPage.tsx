@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Card } from '@/components/Card'
 import { Logo } from '@/components/Logo'
 import { LoginForm } from '@/features/auth/components/LoginForm'
@@ -11,6 +12,7 @@ import { LoginForm } from '@/features/auth/components/LoginForm'
  */
 export function LoginPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   function handleSubmit() {
     void navigate('/', { replace: true })
@@ -21,7 +23,7 @@ export function LoginPage() {
       <Card className="w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center gap-3">
           <Logo />
-          <h1 className="text-lg font-semibold">Sign in to your account</h1>
+          <h1 className="text-lg font-semibold">{t('auth.signInToAccount')}</h1>
         </div>
         <LoginForm onSubmit={handleSubmit} />
       </Card>

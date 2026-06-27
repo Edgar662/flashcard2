@@ -1,5 +1,9 @@
 import { useNavigate } from 'react-router-dom'
+import { Pencil, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Card } from '@/components/Card'
+import { getLanguageMeta } from '@/lib/languages'
+import { useCardCount } from '@/features/cards/hooks/useCardCount'
 import type { Deck } from '../types'
 
 interface DeckCardProps {
@@ -10,6 +14,9 @@ interface DeckCardProps {
 
 export function DeckCard({ deck, onEdit, onDelete }: DeckCardProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
+  const { data: cardCount } = useCardCount(deck.id)
+  const language = getLanguageMeta(deck.language)
 
   function goToDetail() {
     void navigate(`/decks/${deck.id}`)
@@ -31,33 +38,38 @@ export function DeckCard({ deck, onEdit, onDelete }: DeckCardProps) {
           style={{ backgroundColor: deck.color }}
           aria-hidden
         />
-        <div className="flex gap-3 text-sm text-muted-foreground">
+        <div className="flex gap-1 text-muted-foreground">
           <button
             type="button"
-            aria-label={`Edit ${deck.name}`}
+            aria-label={`${t('common.edit')}: ${deck.name}`}
             onClick={(event) => {
               event.stopPropagation()
               onEdit()
             }}
-            className="hover:text-foreground"
+            className="rounded p-1 hover:bg-border hover:text-foreground"
           >
-            Edit
+            <Pencil className="h-4 w-4" aria-hidden />
           </button>
           <button
             type="button"
-            aria-label={`Delete ${deck.name}`}
+            aria-label={`${t('common.delete')}: ${deck.name}`}
             onClick={(event) => {
               event.stopPropagation()
               onDelete()
             }}
-            className="hover:text-destructive"
+            className="rounded p-1 hover:bg-border hover:text-destructive"
           >
-            Delete
+            <Trash2 className="h-4 w-4" aria-hidden />
           </button>
         </div>
       </div>
       <h3 className="mt-3 font-medium">{deck.name}</h3>
-      {deck.language && <p className="text-sm text-muted-foreground">{deck.language}</p>}
+      <p className="text-sm text-muted-foreground">
+        {language.flag} {t(`languages.${deck.language}`)}
+      </p>
+      <p className="mt-2 text-xs text-muted-foreground">
+        {t('decks.cardCount', { count: cardCount ?? 0 })} · {t('decks.neverStudied')}
+      </p>
     </Card>
   )
 }

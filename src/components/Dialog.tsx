@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 
 interface DialogProps {
@@ -24,6 +25,8 @@ export function Dialog({
   children,
   className,
 }: DialogProps) {
+  const { t } = useTranslation()
+
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
@@ -42,7 +45,7 @@ export function Dialog({
           )}
           <div className="mt-4">{children}</div>
           <DialogPrimitive.Close
-            aria-label="Close"
+            aria-label={t('common.close')}
             className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"
           >
             ✕

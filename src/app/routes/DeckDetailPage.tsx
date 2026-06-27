@@ -1,20 +1,22 @@
 import { Link, useParams } from 'react-router-dom'
-import { Card } from '@/components/Card'
+import { useTranslation } from 'react-i18next'
 import { useDeck } from '@/features/decks/hooks/useDeck'
+import { CardList } from '@/features/cards/components/CardList'
+import { getLanguageMeta } from '@/lib/languages'
 
 /**
- * Deck detail screen. Cards aren't built yet (see docs/13-roadmap.md
- * Phase 1) — this proves navigation from a deck card works and gives the
- * cards feature a real place to land later.
+ * Deck detail screen: deck header plus the full Cards CRUD list. No
+ * studying yet (docs/13-roadmap.md Phase 1) — that's a later module.
  */
 export function DeckDetailPage() {
   const { deckId } = useParams<{ deckId: string }>()
   const { data: deck, isLoading } = useDeck(deckId)
+  const { t } = useTranslation()
 
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center text-muted-foreground">
-        Loading…
+        {t('common.loading')}
       </div>
     )
   }
@@ -22,18 +24,20 @@ export function DeckDetailPage() {
   if (!deck) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-2">
-        <p className="text-muted-foreground">Deck not found.</p>
-        <Link to="/" className="text-primary underline">
-          Back to your decks
+        <p className="text-muted-foreground">{t('notFound.title')}</p>
+        <Link to="/decks" className="text-primary underline">
+          {t('decks.backToDecks')}
         </Link>
       </div>
     )
   }
 
+  const language = getLanguageMeta(deck.language)
+
   return (
     <div className="mx-auto max-w-3xl p-6">
-      <Link to="/" className="text-sm text-muted-foreground hover:underline">
-        ← Your decks
+      <Link to="/decks" className="text-sm text-muted-foreground hover:underline">
+        ← {t('decks.backToDecks')}
       </Link>
       <div className="mt-4 flex items-center gap-3">
         <span
@@ -43,10 +47,13 @@ export function DeckDetailPage() {
         />
         <h1 className="text-2xl font-semibold">{deck.name}</h1>
       </div>
-      {deck.language && <p className="mt-1 text-muted-foreground">{deck.language}</p>}
-      <Card className="mt-6 flex min-h-48 items-center justify-center border-dashed text-muted-foreground">
-        Cards will appear here.
-      </Card>
+      <p className="mt-1 text-muted-foreground">
+        {language.flag} {t(`languages.${deck.language}`)}
+      </p>
+
+      <div className="mt-8">
+        <CardList deckId={deck.id} language={deck.language} />
+      </div>
     </div>
   )
 }

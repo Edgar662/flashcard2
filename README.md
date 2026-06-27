@@ -26,4 +26,4 @@ npm run dev
 
 ## Status
 
-Early build — see [`docs/13-roadmap.md`](docs/13-roadmap.md) for what's built vs. planned. Deck management (create/edit/delete/view) works end to end against local storage; sign-in is simulated; cards, studying, and real Supabase/auth integration are not implemented yet.
+Early build — see [`docs/13-roadmap.md`](docs/13-roadmap.md) for what's built vs. planned. Deck and card management (create/edit/delete/search) work end to end against local storage, with a sidebar/drawer navigation shell and a fully internationalized UI (English, Portuguese, Russian, German, Japanese). Sign-in is simulated; studying and real Supabase/auth integration are not implemented yet.

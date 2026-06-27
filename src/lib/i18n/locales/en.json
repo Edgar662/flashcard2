@@ -1,0 +1,98 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "loading": "Loading…",
+    "somethingWentWrong": "Something went wrong. Please try again.",
+    "optional": "optional"
+  },
+  "nav": {
+    "home": "Home",
+    "decks": "Decks",
+    "settings": "Settings",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "auth": {
+    "signInToAccount": "Sign in to your account",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create account",
+    "createAccountComingSoon": "Create account — coming soon.",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email address",
+    "passwordRequired": "Password is required"
+  },
+  "home": {
+    "welcomeBack": "Welcome back",
+    "overview": "Here's an overview of your study materials.",
+    "totalDecks_one": "{{count}} deck",
+    "totalDecks_other": "{{count}} decks",
+    "totalCards_one": "{{count}} card",
+    "totalCards_other": "{{count}} cards",
+    "goToDecks": "Go to your decks"
+  },
+  "decks": {
+    "title": "Your decks",
+    "newDeck": "New deck",
+    "editDeck": "Edit deck",
+    "name": "Name",
+    "language": "Language",
+    "color": "Color",
+    "nameRequired": "Name is required",
+    "nameTooLong": "Keep it under 60 characters",
+    "languageRequired": "Pick a language",
+    "colorRequired": "Pick a color",
+    "selectColor": "Select color {{color}}",
+    "createDeck": "Create deck",
+    "saveChanges": "Save changes",
+    "empty": "No decks yet — create your first one to start studying.",
+    "deleteConfirmTitle": "Delete \"{{name}}\"?",
+    "deleteConfirmDescription": "This can't be undone.",
+    "cardCount_one": "{{count}} card",
+    "cardCount_other": "{{count}} cards",
+    "lastStudied": "Last studied",
+    "neverStudied": "Never studied",
+    "backToDecks": "Your decks"
+  },
+  "cards": {
+    "title": "Cards",
+    "newCard": "New card",
+    "editCard": "Edit card",
+    "searchPlaceholder": "Search cards…",
+    "empty": "No cards yet — add your first one.",
+    "noResults": "No cards match your search.",
+    "front": "Front",
+    "back": "Back",
+    "pronunciation": "Pronunciation",
+    "notes": "Notes",
+    "exampleSentence": "Example sentence",
+    "frontRequired": "Front is required",
+    "backRequired": "Back is required",
+    "createCard": "Create card",
+    "saveChanges": "Save changes",
+    "deleteConfirmTitle": "Delete this card?",
+    "deleteConfirmDescription": "This can't be undone."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "languageDescription": "Choose the language the app is displayed in."
+  },
+  "languages": {
+    "en": "English",
+    "pt": "Portuguese",
+    "ru": "Russian",
+    "de": "German",
+    "ja": "Japanese"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "backToDecks": "Back to your decks"
+  }
+}

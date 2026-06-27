@@ -1,0 +1,98 @@
+{
+  "common": {
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "loading": "Wird geladen…",
+    "somethingWentWrong": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "optional": "optional"
+  },
+  "nav": {
+    "home": "Start",
+    "decks": "Decks",
+    "settings": "Einstellungen",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen"
+  },
+  "auth": {
+    "signInToAccount": "Melden Sie sich bei Ihrem Konto an",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "signIn": "Anmelden",
+    "noAccount": "Noch kein Konto?",
+    "createAccount": "Konto erstellen",
+    "createAccountComingSoon": "Konto erstellen — bald verfügbar.",
+    "emailRequired": "E-Mail-Adresse ist erforderlich",
+    "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein",
+    "passwordRequired": "Passwort ist erforderlich"
+  },
+  "home": {
+    "welcomeBack": "Willkommen zurück",
+    "overview": "Hier ist eine Übersicht Ihrer Lernmaterialien.",
+    "totalDecks_one": "{{count}} Deck",
+    "totalDecks_other": "{{count}} Decks",
+    "totalCards_one": "{{count}} Karte",
+    "totalCards_other": "{{count}} Karten",
+    "goToDecks": "Zu deinen Decks"
+  },
+  "decks": {
+    "title": "Deine Decks",
+    "newDeck": "Neues Deck",
+    "editDeck": "Deck bearbeiten",
+    "name": "Name",
+    "language": "Sprache",
+    "color": "Farbe",
+    "nameRequired": "Name ist erforderlich",
+    "nameTooLong": "Maximal 60 Zeichen",
+    "languageRequired": "Wählen Sie eine Sprache",
+    "colorRequired": "Wählen Sie eine Farbe",
+    "selectColor": "Farbe {{color}} auswählen",
+    "createDeck": "Deck erstellen",
+    "saveChanges": "Änderungen speichern",
+    "empty": "Noch keine Decks — erstellen Sie Ihr erstes, um zu lernen.",
+    "deleteConfirmTitle": "„{{name}}“ löschen?",
+    "deleteConfirmDescription": "Dies kann nicht rückgängig gemacht werden.",
+    "cardCount_one": "{{count}} Karte",
+    "cardCount_other": "{{count}} Karten",
+    "lastStudied": "Zuletzt gelernt",
+    "neverStudied": "Noch nicht gelernt",
+    "backToDecks": "Deine Decks"
+  },
+  "cards": {
+    "title": "Karten",
+    "newCard": "Neue Karte",
+    "editCard": "Karte bearbeiten",
+    "searchPlaceholder": "Karten durchsuchen…",
+    "empty": "Noch keine Karten — fügen Sie Ihre erste hinzu.",
+    "noResults": "Keine Karten entsprechen Ihrer Suche.",
+    "front": "Vorderseite",
+    "back": "Rückseite",
+    "pronunciation": "Aussprache",
+    "notes": "Notizen",
+    "exampleSentence": "Beispielsatz",
+    "frontRequired": "Vorderseite ist erforderlich",
+    "backRequired": "Rückseite ist erforderlich",
+    "createCard": "Karte erstellen",
+    "saveChanges": "Änderungen speichern",
+    "deleteConfirmTitle": "Diese Karte löschen?",
+    "deleteConfirmDescription": "Dies kann nicht rückgängig gemacht werden."
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "languageDescription": "Wählen Sie die Anzeigesprache der App."
+  },
+  "languages": {
+    "en": "Englisch",
+    "pt": "Portugiesisch",
+    "ru": "Russisch",
+    "de": "Deutsch",
+    "ja": "Japanisch"
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "backToDecks": "Zurück zu deinen Decks"
+  }
+}

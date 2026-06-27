@@ -1,16 +1,16 @@
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/Button'
 import { TextField } from '@/components/TextField'
 
-const loginSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Enter a valid email address'),
-  password: z.string().min(1, 'Password is required'),
-})
-
-export type LoginFormValues = z.infer<typeof loginSchema>
+export interface LoginFormValues {
+  email: string
+  password: string
+}
 
 interface LoginFormProps {
   /**
@@ -22,6 +22,19 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onSubmit }: LoginFormProps) {
+  const { t } = useTranslation()
+
+  // Rebuilt whenever the language changes, so already-visible validation
+  // messages switch language immediately rather than staying stale.
+  const loginSchema = useMemo(
+    () =>
+      z.object({
+        email: z.string().min(1, t('auth.emailRequired')).email(t('auth.emailInvalid')),
+        password: z.string().min(1, t('auth.passwordRequired')),
+      }),
+    [t],
+  )
+
   const {
     register,
     handleSubmit,
@@ -31,26 +44,26 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       <TextField
-        label="Email"
+        label={t('auth.email')}
         type="email"
         autoComplete="email"
         error={errors.email?.message}
         {...register('email')}
       />
       <TextField
-        label="Password"
+        label={t('auth.password')}
         type="password"
         autoComplete="current-password"
         error={errors.password?.message}
         {...register('password')}
       />
       <Button type="submit" className="w-full">
-        Sign in
+        {t('auth.signIn')}
       </Button>
       <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{' '}
+        {t('auth.noAccount')}{' '}
         <Link to="/signup" className="font-medium text-primary underline-offset-4 hover:underline">
-          Create account
+          {t('auth.createAccount')}
         </Link>
       </p>
     </form>

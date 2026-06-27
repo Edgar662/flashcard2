@@ -1,0 +1,104 @@
+{
+  "common": {
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "close": "Закрыть",
+    "loading": "Загрузка…",
+    "somethingWentWrong": "Что-то пошло не так. Попробуйте снова.",
+    "optional": "необязательно"
+  },
+  "nav": {
+    "home": "Главная",
+    "decks": "Колоды",
+    "settings": "Настройки",
+    "openMenu": "Открыть меню",
+    "closeMenu": "Закрыть меню"
+  },
+  "auth": {
+    "signInToAccount": "Войдите в свою учётную запись",
+    "email": "Электронная почта",
+    "password": "Пароль",
+    "signIn": "Войти",
+    "noAccount": "Нет учётной записи?",
+    "createAccount": "Создать учётную запись",
+    "createAccountComingSoon": "Создание учётной записи — скоро.",
+    "emailRequired": "Введите адрес электронной почты",
+    "emailInvalid": "Введите действительный адрес электронной почты",
+    "passwordRequired": "Введите пароль"
+  },
+  "home": {
+    "welcomeBack": "С возвращением",
+    "overview": "Обзор ваших учебных материалов.",
+    "totalDecks_one": "{{count}} колода",
+    "totalDecks_few": "{{count}} колоды",
+    "totalDecks_many": "{{count}} колод",
+    "totalDecks_other": "{{count}} колоды",
+    "totalCards_one": "{{count}} карточка",
+    "totalCards_few": "{{count}} карточки",
+    "totalCards_many": "{{count}} карточек",
+    "totalCards_other": "{{count}} карточки",
+    "goToDecks": "Перейти к колодам"
+  },
+  "decks": {
+    "title": "Ваши колоды",
+    "newDeck": "Новая колода",
+    "editDeck": "Редактировать колоду",
+    "name": "Название",
+    "language": "Язык",
+    "color": "Цвет",
+    "nameRequired": "Введите название",
+    "nameTooLong": "Не более 60 символов",
+    "languageRequired": "Выберите язык",
+    "colorRequired": "Выберите цвет",
+    "selectColor": "Выбрать цвет {{color}}",
+    "createDeck": "Создать колоду",
+    "saveChanges": "Сохранить изменения",
+    "empty": "Колод пока нет — создайте первую, чтобы начать учиться.",
+    "deleteConfirmTitle": "Удалить «{{name}}»?",
+    "deleteConfirmDescription": "Это действие нельзя отменить.",
+    "cardCount_one": "{{count}} карточка",
+    "cardCount_few": "{{count}} карточки",
+    "cardCount_many": "{{count}} карточек",
+    "cardCount_other": "{{count}} карточки",
+    "lastStudied": "Последнее повторение",
+    "neverStudied": "Ещё не изучалось",
+    "backToDecks": "Ваши колоды"
+  },
+  "cards": {
+    "title": "Карточки",
+    "newCard": "Новая карточка",
+    "editCard": "Редактировать карточку",
+    "searchPlaceholder": "Поиск карточек…",
+    "empty": "Карточек пока нет — добавьте первую.",
+    "noResults": "Карточки не найдены.",
+    "front": "Лицевая сторона",
+    "back": "Обратная сторона",
+    "pronunciation": "Произношение",
+    "notes": "Заметки",
+    "exampleSentence": "Пример предложения",
+    "frontRequired": "Введите лицевую сторону",
+    "backRequired": "Введите обратную сторону",
+    "createCard": "Создать карточку",
+    "saveChanges": "Сохранить изменения",
+    "deleteConfirmTitle": "Удалить эту карточку?",
+    "deleteConfirmDescription": "Это действие нельзя отменить."
+  },
+  "settings": {
+    "title": "Настройки",
+    "language": "Язык",
+    "languageDescription": "Выберите язык интерфейса приложения."
+  },
+  "languages": {
+    "en": "Английский",
+    "pt": "Португальский",
+    "ru": "Русский",
+    "de": "Немецкий",
+    "ja": "Японский"
+  },
+  "notFound": {
+    "title": "Страница не найдена",
+    "backToDecks": "Вернуться к колодам"
+  }
+}

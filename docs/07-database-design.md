@@ -45,31 +45,33 @@ Populated automatically by a Postgres trigger on `auth.users` insert (standard S
 
 ### `decks`
 
-| Column        | Type                                        | Notes                                                                                                                                                |
-| ------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`          | `uuid` PK, default `gen_random_uuid()`      |                                                                                                                                                      |
-| `user_id`     | `uuid`, references `profiles(id)`, not null | Owner.                                                                                                                                               |
-| `name`        | `text`, not null                            |                                                                                                                                                      |
-| `description` | `text`, nullable                            |                                                                                                                                                      |
-| `language`    | `text`, nullable                            | Free-text tag (e.g. "Russian") — not an enum, since users study arbitrary subjects, not just languages (see [Product Vision](01-product-vision.md)). |
-| `color`       | `text`, not null, default `'#3b82f6'`       | Hex color for visual identification in the deck grid — added when deck management was built; see [User Flows](08-user-flows.md) §2.                  |
-| `created_at`  | `timestamptz`, default `now()`              |                                                                                                                                                      |
-| `updated_at`  | `timestamptz`, default `now()`              | Updated via trigger on row update.                                                                                                                   |
+| Column        | Type                                        | Notes                                                                                                                                                                 |
+| ------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | `uuid` PK, default `gen_random_uuid()`      |                                                                                                                                                                       |
+| `user_id`     | `uuid`, references `profiles(id)`, not null | Owner.                                                                                                                                                                |
+| `name`        | `text`, not null                            |                                                                                                                                                                       |
+| `description` | `text`, nullable                            |                                                                                                                                                                       |
+| `language`    | `text`, not null                            | Constrained to the supported language codes (`en`/`pt`/`ru`/`de`/`ja`) via `check`, not free text — see ADR-0017 for why this reverses the original free-text design. |
+| `color`       | `text`, not null, default `'#3b82f6'`       | Hex color for visual identification in the deck grid — added when deck management was built; see [User Flows](08-user-flows.md) §2.                                   |
+| `created_at`  | `timestamptz`, default `now()`              |                                                                                                                                                                       |
+| `updated_at`  | `timestamptz`, default `now()`              | Updated via trigger on row update.                                                                                                                                    |
 
 Index: `decks(user_id)`.
 
 ### `cards`
 
-| Column       | Type                                                       | Notes                                                                |
-| ------------ | ---------------------------------------------------------- | -------------------------------------------------------------------- |
-| `id`         | `uuid` PK, default `gen_random_uuid()`                     |                                                                      |
-| `deck_id`    | `uuid`, references `decks(id)` on delete cascade, not null |                                                                      |
-| `user_id`    | `uuid`, references `profiles(id)`, not null                | Denormalized from the parent deck's owner — see §Row Level Security. |
-| `front`      | `text`, not null                                           |                                                                      |
-| `back`       | `text`, not null                                           |                                                                      |
-| `notes`      | `text`, nullable                                           | Optional hint/mnemonic — see [MVP Scope](03-mvp-scope.md).           |
-| `created_at` | `timestamptz`, default `now()`                             |                                                                      |
-| `updated_at` | `timestamptz`, default `now()`                             |                                                                      |
+| Column             | Type                                                       | Notes                                                                |
+| ------------------ | ---------------------------------------------------------- | -------------------------------------------------------------------- |
+| `id`               | `uuid` PK, default `gen_random_uuid()`                     |                                                                      |
+| `deck_id`          | `uuid`, references `decks(id)` on delete cascade, not null |                                                                      |
+| `user_id`          | `uuid`, references `profiles(id)`, not null                | Denormalized from the parent deck's owner — see §Row Level Security. |
+| `front`            | `text`, not null                                           | Original word or sentence.                                           |
+| `back`             | `text`, not null                                           | Translation.                                                         |
+| `pronunciation`    | `text`, nullable                                           | Optional — added alongside the Cards feature build.                  |
+| `notes`            | `text`, nullable                                           | Optional hint/mnemonic — see [MVP Scope](03-mvp-scope.md).           |
+| `example_sentence` | `text`, nullable                                           | Optional — added alongside the Cards feature build.                  |
+| `created_at`       | `timestamptz`, default `now()`                             |                                                                      |
+| `updated_at`       | `timestamptz`, default `now()`                             |                                                                      |
 
 Index: `cards(deck_id)` (also speeds up the cascade delete when a deck is removed).
 
