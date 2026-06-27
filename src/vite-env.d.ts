@@ -2,7 +2,8 @@
 
 interface ImportMetaEnv {
   readonly VITE_SUPABASE_URL: string
-  readonly VITE_SUPABASE_ANON_KEY: string
+  /** The frontend-safe "publishable" key — never the secret/service-role key. */
+  readonly VITE_SUPABASE_PUBLISHABLE_KEY: string
 }
 
 interface ImportMeta {

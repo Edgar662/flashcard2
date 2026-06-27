@@ -10,6 +10,7 @@ Built one module at a time, per the agreed process: each phase is reviewed befor
 
 - This documentation set (`/docs`).
 - Repo scaffolding: Vite + React + TypeScript project, ESLint/Prettier, Vitest, Playwright, CI pipeline (see [Tech Stack](05-tech-stack.md)).
+- Vercel deployment readiness — **done**: `vercel.json` SPA rewrite, route-based code splitting (ADR-0019), production env var setup documented in the root README.
 - Supabase project setup: initial migration for `profiles`/`decks`/`cards`/`card_review_state`/`review_logs` with RLS policies (see [Database Design](07-database-design.md)) — **not yet done**; deferred until real auth is wired (see sequencing note above).
 - Base auth wiring (sign up/in/out) — **deferred**; Login/Home currently simulate sign-in only.
 

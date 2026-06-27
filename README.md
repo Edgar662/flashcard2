@@ -8,7 +8,7 @@ The full product and architecture documentation — including the reasoning behi
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in your Supabase project's URL and anon key
+cp .env.example .env.local   # fill in your Supabase project's URL and publishable key
 npm run dev
 ```
 
@@ -23,6 +23,19 @@ npm run dev
 | `npm run format` / `format:check` | Prettier                           |
 | `npm run typecheck`               | TypeScript only, no bundling       |
 | `npm run test` / `test:watch`     | Vitest                             |
+
+## Deploying to Vercel
+
+This is a static Vite SPA — Vercel's Vite framework preset detects `npm run build` / `dist` automatically, and [`vercel.json`](vercel.json) adds the rewrite a client-routed SPA needs (without it, refreshing a nested route like `/decks/abc123` 404s on a static host, since there's no `/decks/abc123` file to serve — the rewrite sends every unmatched path to `index.html` and lets React Router take over).
+
+Required environment variables — set these in the Vercel project's **Settings → Environment Variables** before the first deploy (Vite inlines `VITE_*` vars at _build_ time, so they must exist when Vercel runs the build, not just at runtime):
+
+| Variable                        | Value                                                                                                            |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `VITE_SUPABASE_URL`             | Your Supabase project URL                                                                                        |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | The **Publishable key** from Project Settings → API — never the Secret key, which must never reach frontend code |
+
+See [`.env.example`](.env.example) for local development and ADR-0001 / ADR-0011 for why Supabase and Vercel were chosen.
 
 ## Status
 

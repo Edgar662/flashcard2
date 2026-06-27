@@ -20,7 +20,10 @@ export default defineConfig({
         background_color: '#0f172a',
         display: 'standalone',
         start_url: '/',
-        icons: [],
+        // The SVG mark from src/components/Logo.tsx — a real multi-resolution
+        // PNG icon set (192/512, maskable) is a design task, not a code one;
+        // this at least makes the manifest valid instead of iconless.
+        icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
       },
     }),
   ],
@@ -28,6 +31,16 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+  },
+  build: {
+    // Reviewed: with routes lazy-loaded (see router.tsx, ADR-0019), the
+    // remaining ~650kB raw in the main chunk is react-dom + react-router +
+    // @supabase/supabase-js's bundled sub-clients + i18next + TanStack Query
+    // — all loaded eagerly by design (auth/i18n/data state are global) and
+    // not realistically reducible without replacing a dependency outright.
+    // Raised from Vite's 500kB default so the build doesn't warn on a
+    // reviewed, justified baseline; a regression past this should still warn.
+    chunkSizeWarningLimit: 700,
   },
   test: {
     environment: 'jsdom',

@@ -45,5 +45,6 @@ If an ADR and a living `/docs` page ever disagree about what's currently true, *
 | [0016](0016-internationalization-i18next.md)                         | Internationalization: i18next + react-i18next                             | Accepted |
 | [0017](0017-deck-language-enum.md)                                   | Deck Language Becomes a Constrained Enum, Narrowing "Any Subject" for Now | Accepted |
 | [0018](0018-cascade-delete-orchestration.md)                         | Cross-Entity Cascades Orchestrated in the Hook Layer, Not the Repository  | Accepted |
+| [0019](0019-route-based-code-splitting.md)                           | Route-Based Code Splitting and a Reviewed Chunk-Size Threshold            | Accepted |
 
-ADRs 0001–0014 were accepted together on 2026-06-27, as part of writing the project's foundation before any application code existed (see `/docs/13-roadmap.md` Phase 0). Future decisions — including any reversal of one of these — get their own new ADR, numbered `0019` onward.
+ADRs 0001–0014 were accepted together on 2026-06-27, as part of writing the project's foundation before any application code existed (see `/docs/13-roadmap.md` Phase 0). Future decisions — including any reversal of one of these — get their own new ADR, numbered `0020` onward.

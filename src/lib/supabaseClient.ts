@@ -12,4 +12,4 @@ export type { Session, User } from '@supabase/supabase-js'
  * `Database` via `supabase gen types typescript` and pass it as
  * `createClient<Database>(...)` (see docs/09-api-design.md).
  */
-export const supabase = createClient(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_ANON_KEY)
+export const supabase = createClient(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_PUBLISHABLE_KEY)
