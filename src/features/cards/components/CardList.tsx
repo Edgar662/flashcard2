@@ -111,7 +111,7 @@ export function CardList({ deckId, language }: CardListProps) {
         confirmLabel={t('common.delete')}
         isDestructive
         onConfirm={() => {
-          if (deletingCard) deleteCard.mutate(deletingCard.id)
+          if (deletingCard) deleteCard.mutate({ id: deletingCard.id, deckId: deletingCard.deckId })
         }}
       />
     </div>

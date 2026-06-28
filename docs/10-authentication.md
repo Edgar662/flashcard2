@@ -9,10 +9,12 @@
 
 ## What ships in the MVP
 
-- Sign up (email + password) — creates an `auth.users` row; a Postgres trigger creates the matching `profiles` row (see [Database Design](07-database-design.md)).
-- Sign in / sign out.
-- Password reset via emailed link (Supabase Auth built-in flow).
-- Email verification (Supabase Auth built-in; whether to _require_ verification before use is a launch-config decision, not an architectural one).
+- Sign up (email + password) — creates an `auth.users` row; a Postgres trigger creates the matching `profiles` row (see [Database Design](07-database-design.md)). **Built** (ADR-0021): `SignUpForm` handles both possible outcomes of `supabase.auth.signUp` — an immediate session if the connected project has email confirmation disabled, or a "check your email" message if it's required, since the app doesn't assume either setting.
+- Sign in / sign out. **Built**: `LoginForm` calls `signInWithPassword`; a `SignOutButton` in the sidebar calls `signOut` and clears the query cache (see ADR-0021).
+- Automatic session persistence and restoration on reopen. **Built**: `AuthProvider` (src/app/providers) reads the existing session via `supabase.auth.getSession()` on mount and stays in sync via `onAuthStateChange` — this was infrastructure from day one (ADR-0009), just unused by any real sign-in until now.
+- Automatic redirect to `/login` when signed out, and away from `/login`/`/signup` when already signed in. **Built**: `RequireAuth` and the symmetric `RedirectIfAuthenticated` (src/app/routes) are applied to every route.
+- Password reset via emailed link (Supabase Auth built-in flow). **Not built yet** — no "forgot password" entry point or reset-password page exists in the UI. Supabase Auth supports the flow; only the app-side form is missing.
+- Email verification (Supabase Auth built-in; whether to _require_ verification before use is a project-level setting in the Supabase dashboard, not something this app's code controls either way).
 
 ## How authorization actually works
 

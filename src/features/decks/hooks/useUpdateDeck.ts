@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { optimisticListPatch, rollbackList } from '@/lib/optimisticList'
 import { decksApi } from '../api/decksApi'
-import type { UpdateDeckInput } from '../types'
+import type { Deck, UpdateDeckInput } from '../types'
 
 export function useUpdateDeck() {
   const queryClient = useQueryClient()
@@ -8,9 +9,9 @@ export function useUpdateDeck() {
   return useMutation({
     mutationFn: ({ id, input }: { id: string; input: UpdateDeckInput }) =>
       decksApi.update(id, input),
-    onSuccess: () => {
-      // Invalidating the list key also matches the ['decks', id] detail
-      // query (TanStack Query treats it as a prefix), so one call covers both.
+    onMutate: ({ id, input }) => optimisticListPatch<Deck>(queryClient, ['decks'], id, input),
+    onError: (_error, _variables, context) => rollbackList(queryClient, context),
+    onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ['decks'] })
     },
   })

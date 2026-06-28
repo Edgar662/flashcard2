@@ -1,22 +1,15 @@
-import { LANGUAGE_CODES } from '@/lib/languages'
+import { supabase } from '@/lib/supabaseClient'
+import type { Database } from '@/types/database'
+import type { LanguageCode } from '@/lib/languages'
 import type { CreateDeckInput, Deck, UpdateDeckInput } from '../types'
 
-const STORAGE_KEY = 'flashcards:decks'
-
-function isValidLanguage(value: unknown): value is Deck['language'] {
-  return typeof value === 'string' && (LANGUAGE_CODES as readonly string[]).includes(value)
-}
-
-/** Guards against stale dev data predating the language enum (free text or null). */
-function normalizeDeck(deck: Deck): Deck {
-  return isValidLanguage(deck.language) ? deck : { ...deck, language: 'en' }
-}
+type DeckRow = Database['public']['Tables']['decks']['Row']
 
 /**
  * The contract any deck storage backend must satisfy. `decksApi` below is
- * the only implementation today (localStorage); a future Supabase-backed
- * implementation satisfies the same interface, so nothing outside this file
- * needs to change — see docs/adr/0015-interim-localstorage-persistence.md.
+ * now Supabase-backed (see ADR-0020); the interface itself is unchanged
+ * from the localStorage implementation it replaces (ADR-0015), which is
+ * why no hook or component needed to change for this migration.
  */
 export interface DecksRepository {
   list(): Promise<Deck[]>
@@ -26,63 +19,61 @@ export interface DecksRepository {
   remove(id: string): Promise<void>
 }
 
-function readDecks(): Deck[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    const decks = raw ? (JSON.parse(raw) as Deck[]) : []
-    return decks.map(normalizeDeck)
-  } catch {
-    return []
+function mapRow(row: DeckRow): Deck {
+  return {
+    id: row.id,
+    name: row.name,
+    language: row.language as LanguageCode,
+    color: row.color,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
   }
 }
 
-function writeDecks(decks: Deck[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(decks))
-}
-
-// localStorage access is synchronous; methods still return Promises (via
-// Promise.resolve rather than `async`, which would trip require-await) so
-// the public interface already matches the eventual async Supabase calls.
 export const decksApi: DecksRepository = {
-  list() {
-    return Promise.resolve(readDecks())
+  async list() {
+    const { data, error } = await supabase
+      .from('decks')
+      .select('*')
+      .order('created_at', { ascending: true })
+    if (error) throw error
+    return data.map(mapRow)
   },
 
-  getById(id) {
-    return Promise.resolve(readDecks().find((deck) => deck.id === id) ?? null)
+  async getById(id) {
+    const { data, error } = await supabase.from('decks').select('*').eq('id', id).maybeSingle()
+    if (error) throw error
+    return data ? mapRow(data) : null
   },
 
-  create(input) {
-    const now = new Date().toISOString()
-    const deck: Deck = {
-      id: crypto.randomUUID(),
-      name: input.name,
-      language: input.language,
-      color: input.color,
-      createdAt: now,
-      updatedAt: now,
-    }
-    const decks = readDecks()
-    decks.push(deck)
-    writeDecks(decks)
-    return Promise.resolve(deck)
+  async create(input) {
+    const { data, error } = await supabase
+      .from('decks')
+      .insert({ name: input.name, language: input.language, color: input.color })
+      .select()
+      .single()
+    if (error) throw error
+    return mapRow(data)
   },
 
-  update(id, input) {
-    const decks = readDecks()
-    const index = decks.findIndex((deck) => deck.id === id)
-    const existing = decks[index]
-    if (index === -1 || !existing) {
-      return Promise.reject(new Error(`Deck ${id} not found`))
-    }
-    const updated: Deck = { ...existing, ...input, updatedAt: new Date().toISOString() }
-    decks[index] = updated
-    writeDecks(decks)
-    return Promise.resolve(updated)
+  async update(id, input) {
+    const patch: Database['public']['Tables']['decks']['Update'] = {}
+    if (input.name !== undefined) patch.name = input.name
+    if (input.language !== undefined) patch.language = input.language
+    if (input.color !== undefined) patch.color = input.color
+
+    const { data, error } = await supabase
+      .from('decks')
+      .update(patch)
+      .eq('id', id)
+      .select()
+      .single()
+    if (error) throw error
+    return mapRow(data)
   },
 
-  remove(id) {
-    writeDecks(readDecks().filter((deck) => deck.id !== id))
-    return Promise.resolve()
+  async remove(id) {
+    const { error } = await supabase.from('decks').delete().eq('id', id)
+    if (error) throw error
   },
 }

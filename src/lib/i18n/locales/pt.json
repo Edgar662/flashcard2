@@ -26,7 +26,18 @@
     "createAccountComingSoon": "Criar conta — em breve.",
     "emailRequired": "O e-mail é obrigatório",
     "emailInvalid": "Digite um e-mail válido",
-    "passwordRequired": "A senha é obrigatória"
+    "passwordRequired": "A senha é obrigatória",
+    "passwordTooShort": "Use pelo menos 6 caracteres",
+    "signUpToAccount": "Crie sua conta",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "confirmEmailSent": "Enviamos um link de confirmação para {{email}}. Clique nele para concluir a criação da sua conta.",
+    "invalidCredentials": "E-mail ou senha incorretos.",
+    "signInFailed": "Não foi possível entrar. Tente novamente.",
+    "signUpFailed": "Não foi possível criar sua conta. Tente novamente.",
+    "signingIn": "Entrando…",
+    "creatingAccount": "Criando conta…",
+    "signOut": "Sair",
+    "signedInAs": "Conectado como {{email}}"
   },
   "home": {
     "welcomeBack": "Bem-vindo de volta",

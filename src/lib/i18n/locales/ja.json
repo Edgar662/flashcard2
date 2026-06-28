@@ -26,7 +26,18 @@
     "createAccountComingSoon": "アカウント作成機能は近日公開予定です。",
     "emailRequired": "メールアドレスを入力してください",
     "emailInvalid": "有効なメールアドレスを入力してください",
-    "passwordRequired": "パスワードを入力してください"
+    "passwordRequired": "パスワードを入力してください",
+    "passwordTooShort": "6文字以上で入力してください",
+    "signUpToAccount": "アカウントを作成",
+    "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
+    "confirmEmailSent": "{{email}} 宛に確認リンクを送信しました。リンクをクリックしてアカウント作成を完了してください。",
+    "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。",
+    "signInFailed": "サインインできませんでした。もう一度お試しください。",
+    "signUpFailed": "アカウントを作成できませんでした。もう一度お試しください。",
+    "signingIn": "サインイン中…",
+    "creatingAccount": "アカウントを作成中…",
+    "signOut": "サインアウト",
+    "signedInAs": "{{email}} でサインイン中"
   },
   "home": {
     "welcomeBack": "おかえりなさい",

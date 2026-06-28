@@ -83,7 +83,7 @@ export function CardFormDialog({ open, onOpenChange, deckId, card }: CardFormDia
     const onSuccess = () => onOpenChange(false)
 
     if (isEditing && card) {
-      updateCard.mutate({ id: card.id, input }, { onSuccess })
+      updateCard.mutate({ id: card.id, deckId: card.deckId, input }, { onSuccess })
     } else {
       createCard.mutate({ ...input, deckId }, { onSuccess })
     }

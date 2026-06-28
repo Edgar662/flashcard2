@@ -1,6 +1,6 @@
 # Database Design
 
-Postgres, managed by Supabase. Schema is maintained as versioned SQL migrations in `supabase/migrations/` (see [Folder Structure](06-folder-structure.md)).
+Postgres, managed by Supabase. Schema is maintained as versioned SQL migrations in `supabase/migrations/` (see [Folder Structure](06-folder-structure.md)) — `supabase/migrations/20260627234219_init_schema.sql` is the executable implementation of everything in this document; if the two ever disagree, the migration is what actually runs, and the doc needs fixing (see ADR-0020).
 
 ## Entity overview
 
@@ -130,6 +130,8 @@ RLS is enabled on every table. Authorization is enforced at the database, not ju
 **Decision:** `cards`, `card_review_state`, and `review_logs` each carry a denormalized `user_id`, in addition to their natural parent reference (`deck_id` / `card_id`). Every table's RLS policy checks this direct column rather than joining up to `decks` on every query.
 **Why:** The most frequent query in the whole app is "find this user's due cards" (every study session — see [User Flows](08-user-flows.md) §4). Without a direct `user_id` column, that query — and the RLS check evaluated on every row — would need to join `card_review_state → cards → decks` just to know who owns a row. Denormalizing the owner id turns that into a single indexed equality check, and is what makes the composite index above possible. It also makes the global "study every due card across all decks" view (in MVP scope — see [MVP Scope](03-mvp-scope.md)) a plain single-table query instead of a three-table join.
 **Risk this introduces, and how it's handled:** a denormalized column can drift from the truth if something is allowed to write it incorrectly. Two things prevent that here: (1) there is no feature that ever reassigns who owns a card or its review state — these rows are created once by their owner and never transferred, so there's no update path that could cause drift; (2) every table's policy still validates the denormalized `user_id` against its authoritative parent **on write** (in `with check`), so Postgres rejects an insert/update that tries to attach a row to a parent it doesn't actually own — a client cannot insert a card into someone else's deck merely by claiming its own `user_id`. Reads pay only the cheap direct check; writes pay one cheap subquery to guarantee integrity. This is the standard safe pattern for this kind of denormalization: cheap reads, validated writes.
+
+**Implementation detail (added when the migration was written, see ADR-0020):** every `user_id` column is declared `default auth.uid()`, so application code never sets it explicitly on insert — the repository (`decksApi`/`cardsApi`) only ever sends content columns, and the database fills in the owner. This doesn't weaken the integrity check above: `with check` still validates the resulting value against the row's actual parent, it's just that the value being validated is now supplied by a column default instead of a client-sent field.
 
 Policy for `decks` (the one table with no parent to validate against):
 

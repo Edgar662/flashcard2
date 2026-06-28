@@ -2,27 +2,29 @@ import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/Button'
 import { TextField } from '@/components/TextField'
+import { useSignIn } from '../hooks/useSignIn'
 
-export interface LoginFormValues {
+interface LoginFormValues {
   email: string
   password: string
 }
 
-interface LoginFormProps {
-  /**
-   * Called with the validated form values. Today this only drives a
-   * simulated navigation (see docs/13-roadmap.md) — wiring it to a real
-   * `authApi.signIn` call later does not require changing this component.
-   */
-  onSubmit: (values: LoginFormValues) => void
-}
-
-export function LoginForm({ onSubmit }: LoginFormProps) {
+/**
+ * Fully self-contained: owns its own submit/error/pending state and the
+ * post-success redirect, the same way DeckFormDialog/CardFormDialog own
+ * their mutations rather than taking an onSubmit callback prop. Calls
+ * Supabase Auth directly through `authApi` — see ADR-0020 and
+ * docs/10-authentication.md. AuthProvider picks up the resulting session
+ * reactively; this component doesn't need to touch it.
+ */
+export function LoginForm() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+  const signIn = useSignIn()
 
   // Rebuilt whenever the language changes, so already-visible validation
   // messages switch language immediately rather than staying stale.
@@ -41,6 +43,18 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     formState: { errors },
   } = useForm<LoginFormValues>({ resolver: zodResolver(loginSchema) })
 
+  function onSubmit(values: LoginFormValues) {
+    signIn.mutate(values, {
+      onSuccess: () => void navigate('/', { replace: true }),
+    })
+  }
+
+  const errorMessage = signIn.isError
+    ? signIn.error.message === 'Invalid login credentials'
+      ? t('auth.invalidCredentials')
+      : t('auth.signInFailed')
+    : null
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       <TextField
@@ -57,8 +71,9 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         error={errors.password?.message}
         {...register('password')}
       />
-      <Button type="submit" className="w-full">
-        {t('auth.signIn')}
+      {errorMessage && <p className="text-sm text-destructive">{errorMessage}</p>}
+      <Button type="submit" className="w-full" disabled={signIn.isPending}>
+        {signIn.isPending ? t('auth.signingIn') : t('auth.signIn')}
       </Button>
       <p className="text-center text-sm text-muted-foreground">
         {t('auth.noAccount')}{' '}

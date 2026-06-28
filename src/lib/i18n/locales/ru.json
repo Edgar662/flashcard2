@@ -26,7 +26,18 @@
     "createAccountComingSoon": "Создание учётной записи — скоро.",
     "emailRequired": "Введите адрес электронной почты",
     "emailInvalid": "Введите действительный адрес электронной почты",
-    "passwordRequired": "Введите пароль"
+    "passwordRequired": "Введите пароль",
+    "passwordTooShort": "Минимум 6 символов",
+    "signUpToAccount": "Создайте учётную запись",
+    "alreadyHaveAccount": "Уже есть учётная запись?",
+    "confirmEmailSent": "Мы отправили ссылку для подтверждения на {{email}}. Перейдите по ней, чтобы завершить создание учётной записи.",
+    "invalidCredentials": "Неверный адрес электронной почты или пароль.",
+    "signInFailed": "Не удалось войти. Попробуйте снова.",
+    "signUpFailed": "Не удалось создать учётную запись. Попробуйте снова.",
+    "signingIn": "Вход…",
+    "creatingAccount": "Создание учётной записи…",
+    "signOut": "Выйти",
+    "signedInAs": "Вы вошли как {{email}}"
   },
   "home": {
     "welcomeBack": "С возвращением",

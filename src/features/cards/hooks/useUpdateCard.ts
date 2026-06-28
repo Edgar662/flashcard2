@@ -1,14 +1,24 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { optimisticListPatch, rollbackList } from '@/lib/optimisticList'
 import { cardsApi } from '../api/cardsApi'
-import type { UpdateCardInput } from '../types'
+import type { Card, UpdateCardInput } from '../types'
+
+interface UpdateCardVariables {
+  id: string
+  /** Not sent to the repository — just so this hook knows which deck's cached list to patch. */
+  deckId: string
+  input: UpdateCardInput
+}
 
 export function useUpdateCard() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdateCardInput }) =>
-      cardsApi.update(id, input),
-    onSuccess: () => {
+    mutationFn: ({ id, input }: UpdateCardVariables) => cardsApi.update(id, input),
+    onMutate: ({ id, deckId, input }) =>
+      optimisticListPatch<Card>(queryClient, ['cards', 'deck', deckId], id, input),
+    onError: (_error, _variables, context) => rollbackList(queryClient, context),
+    onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ['cards'] })
     },
   })

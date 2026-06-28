@@ -3,6 +3,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { useTranslation } from 'react-i18next'
 import { Logo } from '@/components/Logo'
 import { SidebarNavLinks } from './SidebarNavLinks'
+import { SidebarFooter } from './SidebarFooter'
 
 interface MobileDrawerProps {
   open: boolean
@@ -34,6 +35,7 @@ export function MobileDrawer({ open, onOpenChange }: MobileDrawerProps) {
             </DialogPrimitive.Close>
           </div>
           <SidebarNavLinks onNavigate={() => onOpenChange(false)} />
+          <SidebarFooter />
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>

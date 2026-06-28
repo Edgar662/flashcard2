@@ -1,6 +1,6 @@
 # 0015. Interim Persistence: localStorage Repository Before Supabase Integration
 
-**Status:** Accepted
+**Status:** Superseded by [ADR-0020](0020-supabase-repository-backend.md)
 **Date:** 2026-06-27
 **Related:** docs/09-api-design.md, docs/13-roadmap.md, ADR-0001, ADR-0004
 

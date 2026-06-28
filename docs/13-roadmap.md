@@ -2,26 +2,26 @@
 
 Built one module at a time, per the agreed process: each phase is reviewed before moving to the next. Phases are sequenced by what the core loop in [Product Vision](01-product-vision.md) needs first.
 
-**Sequencing note:** real authentication and Supabase wiring were deliberately reordered after Login/Home UI to come _after_ core deck and card management, not before — to get the product's central interaction reviewable sooner. Login/Home are built with simulated sign-in (no real session), and decks/cards run against localStorage repositories instead of Supabase for now (ADR-0015). All are designed to slot in the real backend without a UI rewrite — see ADR-0004 and ADR-0015. Internationalization (ADR-0016) and the sidebar/drawer navigation shell were also brought forward, ahead of where the original phase breakdown below placed them, since they touch nearly every screen and are cheaper to build once than retrofitted later.
+**Sequencing note (historical):** real authentication and Supabase wiring were initially deferred after Login/Home UI in favor of core deck and card management, to get the product's central interaction reviewable sooner — decks/cards ran against localStorage repositories (ADR-0015) and sign-in was simulated. Both are now done (ADR-0020, ADR-0021): Supabase is the real repository backend and `RequireAuth`/`RedirectIfAuthenticated` are applied to the real routes. Internationalization (ADR-0016) and the sidebar/drawer navigation shell were also brought forward ahead of the original phase breakdown below, since they touch nearly every screen and are cheaper to build once than retrofitted later.
 
-## Phase 0 — Foundation (current phase)
+## Phase 0 — Foundation
 
 **Goal:** Agree on the architecture before writing application code.
 
 - This documentation set (`/docs`).
 - Repo scaffolding: Vite + React + TypeScript project, ESLint/Prettier, Vitest, Playwright, CI pipeline (see [Tech Stack](05-tech-stack.md)).
 - Vercel deployment readiness — **done**: `vercel.json` SPA rewrite, route-based code splitting (ADR-0019), production env var setup documented in the root README.
-- Supabase project setup: initial migration for `profiles`/`decks`/`cards`/`card_review_state`/`review_logs` with RLS policies (see [Database Design](07-database-design.md)) — **not yet done**; deferred until real auth is wired (see sequencing note above).
-- Base auth wiring (sign up/in/out) — **deferred**; Login/Home currently simulate sign-in only.
+- Supabase project setup: initial migration for `profiles`/`decks`/`cards`/`card_review_state`/`review_logs` with RLS policies (see [Database Design](07-database-design.md)) — **done** (ADR-0020); the migration exists and is reviewed, but applying it to a real cloud project and configuring env vars there is an operational step for whoever owns that project, not something done from this repo alone.
+- Base auth wiring (sign up/in/out) — **done** (ADR-0021): real Supabase Auth, `RequireAuth` applied to every authenticated route.
 
-**Exit criteria (revised):** A user lands on a "your decks" screen and can manage decks end to end against local persistence. Real auth + RLS-backed tables become the exit criteria for this phase once that work resumes.
+**Exit criteria:** met. A user signs up, signs in, and manages decks/cards against the real Supabase backend, RLS-isolated per user.
 
 ## Phase 1 — Core loop: decks, cards, studying
 
 **Goal:** Prove the product's central promise.
 
-- Decks: create/edit/delete/list — **done**, against the localStorage repository in ADR-0015 ([User Flows](08-user-flows.md) §2, §5).
-- Cards: create/edit/delete/search/sort within a deck — **done**, same localStorage approach via a dedicated `CardsRepository` ([User Flows](08-user-flows.md) §3).
+- Decks: create/edit/delete/list — **done**, against the real Supabase backend, RLS-isolated per user (ADR-0020) ([User Flows](08-user-flows.md) §2, §5).
+- Cards: create/edit/delete/search/sort within a deck — **done**, same Supabase-backed approach via a dedicated `CardsRepository` ([User Flows](08-user-flows.md) §3).
 - `domain/srs`: types prepared (`CardReviewState`, `CardReviewRating`) per ADR-0007's content/scheduling separation; the scheduling algorithm itself is not yet built.
 - Study session: due-card queue (per-deck and the global cross-deck view — both share one query, see [Database Design](07-database-design.md) §Row Level Security), Again/Good/Easy, session summary ([User Flows](08-user-flows.md) §4).
 

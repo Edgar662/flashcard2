@@ -1,20 +1,32 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createSupabaseMock } from '@/test/createSupabaseMock'
+import { supabase } from '@/lib/supabaseClient'
 import { cardsApi } from './cardsApi'
+
+vi.mock('@/lib/supabaseClient', () => ({ supabase: { from: vi.fn() } }))
 
 const DECK_A = 'deck-a'
 const DECK_B = 'deck-b'
 
+let mock: ReturnType<typeof createSupabaseMock>
+
 beforeEach(() => {
-  localStorage.clear()
+  mock = createSupabaseMock()
+  // supabase.from is a real class method (hence the generic signature below);
+  // detaching it here is fine — we're replacing its implementation outright,
+  // never calling it with a borrowed `this`.
+  // eslint-disable-next-line @typescript-eslint/unbound-method, @typescript-eslint/no-unnecessary-type-assertion -- tsc requires both casts here even though the linter's type info disagrees
+  vi.mocked(supabase.from).mockImplementation(mock.client.from as unknown as typeof supabase.from)
 })
 
 describe('cardsApi', () => {
   it('starts empty for a deck', async () => {
     expect(await cardsApi.listByDeck(DECK_A)).toEqual([])
     expect(await cardsApi.countByDeck(DECK_A)).toBe(0)
+    expect(await cardsApi.countAll()).toBe(0)
   })
 
-  it('creates a card and lists it under its deck only', async () => {
+  it('creates a card and lists it under its deck only, mapping columns to camelCase', async () => {
     const card = await cardsApi.create({
       deckId: DECK_A,
       front: 'привет',
@@ -25,6 +37,8 @@ describe('cardsApi', () => {
     })
 
     expect(card.id).toBeTruthy()
+    expect(card.deckId).toBe(DECK_A)
+    expect(card.pronunciation).toBe('privet')
     expect(await cardsApi.listByDeck(DECK_A)).toEqual([card])
     expect(await cardsApi.listByDeck(DECK_B)).toEqual([])
     expect(await cardsApi.countByDeck(DECK_A)).toBe(1)

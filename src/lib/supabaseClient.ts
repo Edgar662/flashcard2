@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import type { Database } from '@/types/database'
 import { env } from './env'
 
 export type { Session, User } from '@supabase/supabase-js'
@@ -8,8 +9,11 @@ export type { Session, User } from '@supabase/supabase-js'
  * §Data-access layer, every other file that needs Supabase imports it from
  * here rather than constructing its own client.
  *
- * Untyped for now — once supabase/migrations exist, regenerate
- * `Database` via `supabase gen types typescript` and pass it as
- * `createClient<Database>(...)` (see docs/09-api-design.md).
+ * Typed against src/types/database.ts, hand-written to match
+ * supabase/migrations/20260627234219_init_schema.sql — see that file's
+ * header for how to replace it with a real generated one later.
  */
-export const supabase = createClient(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_PUBLISHABLE_KEY)
+export const supabase = createClient<Database>(
+  env.VITE_SUPABASE_URL,
+  env.VITE_SUPABASE_PUBLISHABLE_KEY,
+)

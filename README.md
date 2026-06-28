@@ -12,6 +12,21 @@ cp .env.example .env.local   # fill in your Supabase project's URL and publishab
 npm run dev
 ```
 
+### Setting up Supabase
+
+This app has no backend of its own — Supabase is the entire database/auth layer (ADR-0001), and the schema lives in `supabase/migrations/` as version-controlled SQL, not clicked together in a dashboard (docs/06-folder-structure.md).
+
+1. Create a project at [supabase.com](https://supabase.com) (or use an existing one).
+2. Link this repo to it and apply the migration:
+   ```bash
+   npx supabase login
+   npx supabase link --project-ref <your-project-ref>
+   npx supabase db push
+   ```
+3. Copy the project's URL and **Publishable key** (Project Settings → API) into `.env.local` as shown in `.env.example`.
+
+That single migration creates every table (`profiles`, `decks`, `cards`, `card_review_state`, `review_logs`), Row Level Security policies, and triggers described in [`docs/07-database-design.md`](docs/07-database-design.md) — see [ADR-0020](docs/adr/0020-supabase-repository-backend.md) for what changed when the app moved from local-only storage to this.
+
 ## Scripts
 
 | Command                           | Does                               |
@@ -39,4 +54,4 @@ See [`.env.example`](.env.example) for local development and ADR-0001 / ADR-0011
 
 ## Status
 
-Early build — see [`docs/13-roadmap.md`](docs/13-roadmap.md) for what's built vs. planned. Deck and card management (create/edit/delete/search) work end to end against local storage, with a sidebar/drawer navigation shell and a fully internationalized UI (English, Portuguese, Russian, German, Japanese). Sign-in is simulated; studying and real Supabase/auth integration are not implemented yet.
+Early build — see [`docs/13-roadmap.md`](docs/13-roadmap.md) for what's built vs. planned. Real Supabase Auth (sign up, sign in, sign out, session persistence) and RLS-isolated deck/card management run against a real Supabase backend (no more local-only storage), with a sidebar/drawer navigation shell and a fully internationalized UI (English, Portuguese, Russian, German, Japanese). Studying, password reset, and OAuth are not implemented yet.

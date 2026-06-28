@@ -1,8 +1,19 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createSupabaseMock } from '@/test/createSupabaseMock'
+import { supabase } from '@/lib/supabaseClient'
 import { decksApi } from './decksApi'
 
+vi.mock('@/lib/supabaseClient', () => ({ supabase: { from: vi.fn() } }))
+
+let mock: ReturnType<typeof createSupabaseMock>
+
 beforeEach(() => {
-  localStorage.clear()
+  mock = createSupabaseMock()
+  // supabase.from is a real class method (hence the generic signature below);
+  // detaching it here is fine — we're replacing its implementation outright,
+  // never calling it with a borrowed `this`.
+  // eslint-disable-next-line @typescript-eslint/unbound-method, @typescript-eslint/no-unnecessary-type-assertion -- tsc requires both casts here even though the linter's type info disagrees
+  vi.mocked(supabase.from).mockImplementation(mock.client.from as unknown as typeof supabase.from)
 })
 
 describe('decksApi', () => {
@@ -10,12 +21,23 @@ describe('decksApi', () => {
     expect(await decksApi.list()).toEqual([])
   })
 
-  it('creates a deck and lists it', async () => {
+  it('creates a deck and lists it, mapping snake_case columns to camelCase', async () => {
     const deck = await decksApi.create({ name: 'Russian', language: 'ru', color: '#3b82f6' })
 
     expect(deck.id).toBeTruthy()
     expect(deck.name).toBe('Russian')
+    expect(deck.language).toBe('ru')
+    expect(deck.color).toBe('#3b82f6')
+    expect(deck.createdAt).toBeTruthy()
+    expect(deck.updatedAt).toBeTruthy()
     expect(await decksApi.list()).toEqual([deck])
+  })
+
+  it('never sends user_id on create — ownership comes from the column default, not the client', async () => {
+    await decksApi.create({ name: 'Russian', language: 'ru', color: '#3b82f6' })
+
+    const [row] = mock.getTable('decks')
+    expect(row).not.toHaveProperty('user_id')
   })
 
   it('finds a deck by id, or returns null', async () => {
@@ -25,7 +47,7 @@ describe('decksApi', () => {
     expect(await decksApi.getById('missing-id')).toBeNull()
   })
 
-  it('updates a deck in place, bumping updatedAt', async () => {
+  it('updates only the fields provided, bumping updatedAt', async () => {
     const deck = await decksApi.create({ name: 'Russian', language: 'ru', color: '#3b82f6' })
 
     const updated = await decksApi.update(deck.id, { name: 'Russian 101', color: '#22c55e' })
@@ -33,6 +55,7 @@ describe('decksApi', () => {
     expect(updated.id).toBe(deck.id)
     expect(updated.name).toBe('Russian 101')
     expect(updated.color).toBe('#22c55e')
+    expect(updated.language).toBe('ru')
     expect(await decksApi.list()).toEqual([updated])
   })
 
@@ -46,25 +69,5 @@ describe('decksApi', () => {
     await decksApi.remove(deck.id)
 
     expect(await decksApi.list()).toEqual([])
-  })
-
-  it('falls back to English for a deck with an invalid stored language', async () => {
-    localStorage.setItem(
-      'flashcards:decks',
-      JSON.stringify([
-        {
-          id: 'legacy-1',
-          name: 'Old deck',
-          language: 'French', // pre-enum free-text value
-          color: '#3b82f6',
-          createdAt: '2026-01-01T00:00:00.000Z',
-          updatedAt: '2026-01-01T00:00:00.000Z',
-        },
-      ]),
-    )
-
-    const decks = await decksApi.list()
-
-    expect(decks[0]?.language).toBe('en')
   })
 })

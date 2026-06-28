@@ -26,7 +26,18 @@
     "createAccountComingSoon": "Konto erstellen — bald verfügbar.",
     "emailRequired": "E-Mail-Adresse ist erforderlich",
     "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein",
-    "passwordRequired": "Passwort ist erforderlich"
+    "passwordRequired": "Passwort ist erforderlich",
+    "passwordTooShort": "Mindestens 6 Zeichen verwenden",
+    "signUpToAccount": "Konto erstellen",
+    "alreadyHaveAccount": "Sie haben bereits ein Konto?",
+    "confirmEmailSent": "Wir haben einen Bestätigungslink an {{email}} gesendet. Klicken Sie darauf, um die Erstellung Ihres Kontos abzuschließen.",
+    "invalidCredentials": "E-Mail oder Passwort ist falsch.",
+    "signInFailed": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "signUpFailed": "Konto konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+    "signingIn": "Anmelden…",
+    "creatingAccount": "Konto wird erstellt…",
+    "signOut": "Abmelden",
+    "signedInAs": "Angemeldet als {{email}}"
   },
   "home": {
     "welcomeBack": "Willkommen zurück",

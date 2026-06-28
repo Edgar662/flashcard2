@@ -1,95 +1,118 @@
+import { supabase } from '@/lib/supabaseClient'
+import type { Database } from '@/types/database'
 import type { Card, CreateCardInput, UpdateCardInput } from '../types'
 
-const STORAGE_KEY = 'flashcards:cards'
+type CardRow = Database['public']['Tables']['cards']['Row']
 
 /**
- * The contract any card storage backend must satisfy — same pattern as
- * `DecksRepository` (see docs/adr/0015-interim-localstorage-persistence.md).
- * `cardsApi` below is the only implementation today (localStorage); a
- * future Supabase-backed implementation satisfies the same interface.
+ * Same contract as before the Supabase migration (ADR-0020) — `removeByDeck`
+ * is kept even though `cards.deck_id` now has `on delete cascade` in
+ * Postgres (so deleting a deck already removes its cards without this
+ * being called — see useDeleteDeck), because "clear every card in a deck
+ * without deleting the deck itself" is still a meaningful, separate
+ * operation for a repository to expose.
  */
 export interface CardsRepository {
   listByDeck(deckId: string): Promise<Card[]>
   countByDeck(deckId: string): Promise<number>
-  /** Across every deck — used by the Home dashboard's aggregate stats. */
   countAll(): Promise<number>
   getById(id: string): Promise<Card | null>
   create(input: CreateCardInput): Promise<Card>
   update(id: string, input: UpdateCardInput): Promise<Card>
   remove(id: string): Promise<void>
-  /** Cascade delete — called when the owning deck is removed. */
   removeByDeck(deckId: string): Promise<void>
 }
 
-function readCards(): Card[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? (JSON.parse(raw) as Card[]) : []
-  } catch {
-    return []
+function mapRow(row: CardRow): Card {
+  return {
+    id: row.id,
+    deckId: row.deck_id,
+    front: row.front,
+    back: row.back,
+    pronunciation: row.pronunciation,
+    notes: row.notes,
+    exampleSentence: row.example_sentence,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
   }
 }
 
-function writeCards(cards: Card[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards))
-}
-
 export const cardsApi: CardsRepository = {
-  listByDeck(deckId) {
-    return Promise.resolve(readCards().filter((card) => card.deckId === deckId))
+  async listByDeck(deckId) {
+    const { data, error } = await supabase
+      .from('cards')
+      .select('*')
+      .eq('deck_id', deckId)
+      .order('created_at', { ascending: true })
+    if (error) throw error
+    return data.map(mapRow)
   },
 
-  countByDeck(deckId) {
-    return Promise.resolve(readCards().filter((card) => card.deckId === deckId).length)
+  async countByDeck(deckId) {
+    const { count, error } = await supabase
+      .from('cards')
+      .select('*', { count: 'exact', head: true })
+      .eq('deck_id', deckId)
+    if (error) throw error
+    return count ?? 0
   },
 
-  countAll() {
-    return Promise.resolve(readCards().length)
+  async countAll() {
+    const { count, error } = await supabase
+      .from('cards')
+      .select('*', { count: 'exact', head: true })
+    if (error) throw error
+    return count ?? 0
   },
 
-  getById(id) {
-    return Promise.resolve(readCards().find((card) => card.id === id) ?? null)
+  async getById(id) {
+    const { data, error } = await supabase.from('cards').select('*').eq('id', id).maybeSingle()
+    if (error) throw error
+    return data ? mapRow(data) : null
   },
 
-  create(input) {
-    const now = new Date().toISOString()
-    const card: Card = {
-      id: crypto.randomUUID(),
-      deckId: input.deckId,
-      front: input.front,
-      back: input.back,
-      pronunciation: input.pronunciation,
-      notes: input.notes,
-      exampleSentence: input.exampleSentence,
-      createdAt: now,
-      updatedAt: now,
-    }
-    const cards = readCards()
-    cards.push(card)
-    writeCards(cards)
-    return Promise.resolve(card)
+  async create(input) {
+    const { data, error } = await supabase
+      .from('cards')
+      .insert({
+        deck_id: input.deckId,
+        front: input.front,
+        back: input.back,
+        pronunciation: input.pronunciation,
+        notes: input.notes,
+        example_sentence: input.exampleSentence,
+      })
+      .select()
+      .single()
+    if (error) throw error
+    return mapRow(data)
   },
 
-  update(id, input) {
-    const cards = readCards()
-    const index = cards.findIndex((card) => card.id === id)
-    const existing = cards[index]
-    if (index === -1 || !existing) {
-      return Promise.reject(new Error(`Card ${id} not found`))
-    }
-    const updated: Card = { ...existing, ...input, updatedAt: new Date().toISOString() }
-    cards[index] = updated
-    writeCards(cards)
-    return Promise.resolve(updated)
+  async update(id, input) {
+    const patch: Database['public']['Tables']['cards']['Update'] = {}
+    if (input.front !== undefined) patch.front = input.front
+    if (input.back !== undefined) patch.back = input.back
+    if (input.pronunciation !== undefined) patch.pronunciation = input.pronunciation
+    if (input.notes !== undefined) patch.notes = input.notes
+    if (input.exampleSentence !== undefined) patch.example_sentence = input.exampleSentence
+
+    const { data, error } = await supabase
+      .from('cards')
+      .update(patch)
+      .eq('id', id)
+      .select()
+      .single()
+    if (error) throw error
+    return mapRow(data)
   },
 
-  remove(id) {
-    writeCards(readCards().filter((card) => card.id !== id))
-    return Promise.resolve()
+  async remove(id) {
+    const { error } = await supabase.from('cards').delete().eq('id', id)
+    if (error) throw error
   },
 
-  removeByDeck(deckId) {
-    writeCards(readCards().filter((card) => card.deckId !== deckId))
-    return Promise.resolve()
+  async removeByDeck(deckId) {
+    const { error } = await supabase.from('cards').delete().eq('deck_id', deckId)
+    if (error) throw error
   },
 }

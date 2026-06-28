@@ -1,16 +1,20 @@
 import { useTranslation } from 'react-i18next'
+import { Card } from '@/components/Card'
+import { Logo } from '@/components/Logo'
+import { SignUpForm } from '@/features/auth/components/SignUpForm'
 
-/**
- * Placeholder sign-up route, linked from LoginForm's "Create account".
- * The real sign-up form belongs to the `auth` feature, built alongside
- * the real sign-in flow — see docs/10-authentication.md.
- */
 export function SignUpPage() {
   const { t } = useTranslation()
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <p className="text-muted-foreground">{t('auth.createAccountComingSoon')}</p>
+    <div className="flex min-h-screen items-center justify-center bg-muted p-4">
+      <Card className="w-full max-w-sm">
+        <div className="mb-6 flex flex-col items-center gap-3">
+          <Logo />
+          <h1 className="text-lg font-semibold">{t('auth.signUpToAccount')}</h1>
+        </div>
+        <SignUpForm />
+      </Card>
     </div>
   )
 }

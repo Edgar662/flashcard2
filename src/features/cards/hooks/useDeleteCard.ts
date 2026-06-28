@@ -1,14 +1,23 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { optimisticListRemove, rollbackList } from '@/lib/optimisticList'
 import { cardsApi } from '../api/cardsApi'
+import type { Card } from '../types'
+
+interface DeleteCardVariables {
+  id: string
+  /** Not sent to the repository — just so this hook knows which deck's cached list to update. */
+  deckId: string
+}
 
 export function useDeleteCard() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) => cardsApi.remove(id),
-    onSuccess: () => {
-      // deckId isn't available post-delete; invalidating broadly is simpler
-      // than an extra lookup, and harmless at this app's scale.
+    mutationFn: ({ id }: DeleteCardVariables) => cardsApi.remove(id),
+    onMutate: ({ id, deckId }) =>
+      optimisticListRemove<Card>(queryClient, ['cards', 'deck', deckId], id),
+    onError: (_error, _variables, context) => rollbackList(queryClient, context),
+    onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ['cards'] })
     },
   })
